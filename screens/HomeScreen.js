@@ -29,7 +29,7 @@ const HomeScreen = () => {
         onPress: null,
         style: "cancel",
       },
-      { text: "OK", onPress: () => navigation.navigate("LogIn"), },
+      { text: "OK", onPress: () => navigation.navigate("LogIn") },
     ]);
   };
 
@@ -79,7 +79,7 @@ const HomeScreen = () => {
           <View className="border-b" />
           <ScheduleCard
             id={"0001"}
-            title={"Module 3 - Week 3"}
+            title={"Module 4 - Week 4"}
             date={"##/##/####"}
             time={"##:##"}
             place={"BK2"}
@@ -88,7 +88,7 @@ const HomeScreen = () => {
           <View className="border-b" />
           <ScheduleCard
             id={"0001"}
-            title={"Module 3 - Week 3"}
+            title={"Module 5 - Week 5"}
             date={"##/##/####"}
             time={"##:##"}
             place={"BK2"}
@@ -113,7 +113,10 @@ const HomeScreen = () => {
           <MegaphoneIcon size={55} color="white" />
           <Text className="text-white font-semibold text-sm">Announcement</Text>
         </TouchableOpacity>
-        <TouchableOpacity className="h-24 w-24 bg-[#3A5311] justify-center items-center rounded-lg drop-shadow-lg">
+        <TouchableOpacity
+          className="h-24 w-24 bg-[#3A5311] justify-center items-center rounded-lg drop-shadow-lg"
+          onPress={() => navigation.navigate("Report")}
+        >
           <PresentationChartLineIcon size={55} color="white" />
           <Text className="text-white font-semibold text-sm">Report</Text>
         </TouchableOpacity>

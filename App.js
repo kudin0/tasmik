@@ -13,6 +13,8 @@ import { Provider } from "react-redux";
 import { store } from "./store";
 import TasmikScreen from "./screens/TasmikScreen";
 import TasmikDetailScreen from "./screens/TasmikDetailScreen";
+import ReportScreen from "./screens/ReportScreen";
+import ReportDetailScreen from "./screens/ReportDetailScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -56,7 +58,21 @@ export default function App() {
             component={TasmikScreen}
             options={{ headerShown: false }}
           />
-          <Stack.Screen name="TasmikDetail" component={TasmikDetailScreen} options={{ presentation: "modal", headerShown: false}} />
+          <Stack.Screen
+            name="TasmikDetail"
+            component={TasmikDetailScreen}
+            options={{ presentation: "modal", headerShown: false }}
+          />
+          <Stack.Screen
+            name="Report"
+            component={ReportScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="ReportDetail"
+            component={ReportDetailScreen}
+            options={{ presentation: "modal", headerShown: false }}
+          />
         </Stack.Navigator>
       </Provider>
     </NavigationContainer>

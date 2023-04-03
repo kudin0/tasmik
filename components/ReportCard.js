@@ -3,14 +3,13 @@ import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import { AdjustmentsHorizontalIcon } from "react-native-heroicons/outline";
 
-const ScheduleCard = ({
+const ReportCard = ({
   id,
   title,
   date,
-  time,
-  place,
-  details,
-  attendance,
+  marks1,
+  marks2,
+  marks3,
   aspect1,
   aspect2,
   aspect3,
@@ -19,34 +18,32 @@ const ScheduleCard = ({
 
   return (
     <TouchableOpacity
-      className="relative bg-white flex-row"
+      className="relative bg-white mt-2 flex-row"
       onPress={() => {
-        navigation.navigate("TasmikDetail", {
+        navigation.navigate("ReportDetail", {
           id,
           title,
           date,
-          time,
-          place,
-          details,
-          attendance,
+          marks1,
+          marks2,
+          marks3,
           aspect1,
           aspect2,
           aspect3,
         });
       }}
     >
-      <View className="bg-white w-full justify-center py-3 rounded-b-lg border-[#3A5311] h-[70px]">
-        <View className="mx-4">
-          <Text className="text-lg font-semibold text-[#728C69]">
-            {title}
-          </Text>
-          <Text className="text-base font-semibold text-[#74B49B]">
+      <View className="bg-[#BECBD3] justify-between items-center rounded-lg w-full flex-row p-4">
+        <View>
+          <Text className="text-[#3A5311] font-bold text-lg">{title}</Text>
+          <Text className="text-[#728C69] font-semibold text-base">
             Date: {date}
           </Text>
         </View>
+        <AdjustmentsHorizontalIcon size={25} color="#3A5311" />
       </View>
     </TouchableOpacity>
   );
 };
 
-export default ScheduleCard;
+export default ReportCard;
