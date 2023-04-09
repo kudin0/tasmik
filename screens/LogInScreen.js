@@ -10,14 +10,36 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Platform,
+  Alert,
+  DevSettings,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { ArrowLeftIcon } from "react-native-heroicons/solid";
 import SafeViewAndroid from "../components/SafeViewAndroid";
+import { auth } from "../firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 const LogInScreen = () => {
   const navigation = useNavigation();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  loginUser = async (email, password) => {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+      alertNoAcc();
+    }
+  };
+
+  const alertNoAcc = () => {
+    Alert.alert(
+      "Login Failed",
+      "Your email or password is incorrect. Please try again",
+      [{ text: "OK", onPress: null }]
+    );
+  };
 
   return (
     <KeyboardAvoidingView
@@ -51,13 +73,16 @@ const LogInScreen = () => {
             </View>
             <View className="pt-[10px] px-5">
               <Text className="mx-2 text-left text-lg font-semibold text-[#74B49B]">
-                User Id
+                User Email
               </Text>
               <TextInput
                 className="mb-5 pl-2 h-12 bg-white rounded-lg text-lg text-[#728C69]"
-                maxLength={20}
-                placeholder="User Id"
+                placeholder="Email"
                 placeholderTextColor="#728C69"
+                onChangeText={(email) => setEmail(email)}
+                autoCapitalize="none"
+                value={email}
+                clearButtonMode="always"
               />
 
               <Text className="mx-2 text-left text-lg font-semibold text-[#74B49B]">
@@ -69,6 +94,9 @@ const LogInScreen = () => {
                 placeholder="Password"
                 placeholderTextColor="#728C69"
                 secureTextEntry={true}
+                onChangeText={(password) => setPassword(password)}
+                value={password}
+                clearButtonMode="always"
               />
 
               <TouchableOpacity className="items-end">
@@ -79,7 +107,7 @@ const LogInScreen = () => {
             </View>
             <View className="mt-[100px] items-center">
               <TouchableOpacity
-                onPress={() => navigation.navigate("Home")}
+                onPress={() => loginUser(email, password)}
                 className="w-[270px] rounded-lg p-3 bg-[#3A5311]"
               >
                 <Text className="text-center text-white text-2xl font-bold">

@@ -5,8 +5,8 @@ import {
   Image,
   SafeAreaView,
 } from "react-native";
-import React from "react";
-import { useNavigation } from "@react-navigation/native";
+import React, { useEffect, useState } from "react";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import {
   CalendarDaysIcon,
   HomeIcon,
@@ -14,9 +14,24 @@ import {
 } from "react-native-heroicons/outline";
 import { ArrowLeftIcon } from "react-native-heroicons/solid";
 import SafeViewAndroid from "../components/SafeViewAndroid";
+import { doc, getDoc } from "firebase/firestore";
+import { auth, db } from "../firebase";
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
+
+  const [user, setUser] = useState("");
+
+  useEffect(() => {
+    getDoc(doc(db, "users", auth.currentUser.uid)).then((snapshot) => {
+      if (snapshot.exists) {
+        setUser(snapshot.data());
+        console.log(user);
+      } else {
+        console.log("User does not exists");
+      }
+    });
+  }, []);
 
   return (
     <SafeAreaView
@@ -38,15 +53,15 @@ const ProfileScreen = () => {
       <View className="justify-between items-center bg-[#F6F5F5] py-5">
         <Image
           source={{
-            uri: "https://ukmfolio.ukm.my/pluginfile.php/1772765/user/icon/klassroom/f1?rev=11377712",
+            uri: user.picture,
           }}
           className="w-32 h-32 rounded-full p-4"
         />
         <Text className="pt-2 text-[#728C69] font-bold text-2xl">
-          Izzudin Zamri
+          {user.name}
         </Text>
         <Text className="pt-1 text-[#728C69] font-semibold text-lg">
-          A182956
+          {user.matric}
         </Text>
       </View>
 
@@ -59,29 +74,35 @@ const ProfileScreen = () => {
         </View>
         <View className="mx-7 space-y-1 pt-3">
           <Text className="text-lg font-semibold text-[#728C69]">
-            7-June-2002
+            {user.dob}
           </Text>
           <Text className="text-base font-semibold text-[#74B49B]">
             Date of Birth
           </Text>
         </View>
         <View className="mx-7 space-y-1 pt-3">
-          <Text className="text-lg font-semibold text-[#728C69]">Male</Text>
+          <Text className="text-lg font-semibold text-[#728C69]">
+            {user.gender}
+          </Text>
           <Text className="text-md font-semibold text-[#74B49B]">Gender</Text>
         </View>
         <View className="mx-7 space-y-1 pt-3">
-          <Text className="text-lg font-semibold text-[#728C69]">Year 3</Text>
+          <Text className="text-lg font-semibold text-[#728C69]">
+            Year {user.year}
+          </Text>
           <Text className="text-base font-semibold text-[#74B49B]">
             Year of Study
           </Text>
         </View>
         <View className="mx-7 space-y-1 pt-3">
-          <Text className="text-lg font-semibold text-[#728C69]">Syariah</Text>
+          <Text className="text-lg font-semibold text-[#728C69]">
+            {user.course}
+          </Text>
           <Text className="text-base font-semibold text-[#74B49B]">Course</Text>
         </View>
         <View className="mx-7 space-y-1 pt-3">
           <Text className="text-lg font-semibold text-[#728C69]">
-            Malaysian
+            {user.nationality}
           </Text>
           <Text className="text-base font-semibold text-[#74B49B]">
             Nationality
@@ -97,7 +118,7 @@ const ProfileScreen = () => {
             onPress={() => navigation.navigate("Profile")}
           >
             <View className="h-full justify-center items-center">
-              <UserIcon size={30} color="#3A5311" fill="#728C69" />
+              <UserIcon size={30} color="#3A5311" />
             </View>
           </TouchableOpacity>
           <TouchableOpacity
@@ -105,7 +126,7 @@ const ProfileScreen = () => {
             onPress={() => navigation.navigate("Home")}
           >
             <View className="h-full justify-center items-center">
-              <HomeIcon size={30} color="#728C69" />
+              <HomeIcon size={30} color="#74B49B" />
             </View>
           </TouchableOpacity>
           <TouchableOpacity
@@ -113,7 +134,7 @@ const ProfileScreen = () => {
             onPress={() => navigation.navigate("Tasmik")}
           >
             <View className="h-full justify-center items-center">
-              <CalendarDaysIcon size={30} color="#728C69" />
+              <CalendarDaysIcon size={30} color="#74B49B" />
             </View>
           </TouchableOpacity>
         </View>

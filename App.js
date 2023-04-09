@@ -1,6 +1,4 @@
-import { StatusBar } from "expo-status-bar";
-import React from "react";
-import { Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import SplashScreen from "./screens/SplashScreen";
@@ -15,66 +13,97 @@ import TasmikScreen from "./screens/TasmikScreen";
 import TasmikDetailScreen from "./screens/TasmikDetailScreen";
 import ReportScreen from "./screens/ReportScreen";
 import ReportDetailScreen from "./screens/ReportDetailScreen";
+import { auth } from "./firebase";
 
 const Stack = createNativeStackNavigator();
 
-export default function App() {
+function App() {
+  const [initializing, setInitializing] = useState(true);
+  const [user, setUser] = useState();
+
+  function onAuthStateChanged(user) {
+    setUser(user);
+    if (initializing) {
+      setInitializing(false);
+    }
+  }
+
+  useEffect(() => {
+    const subscriber = auth.onAuthStateChanged(onAuthStateChanged);
+    return subscriber;
+  }, []);
+
+  if (initializing) return null;
+
+  if (!user) {
+    return (
+      <Stack.Navigator>
+        <Stack.Screen
+          name="SplashScreen"
+          component={SplashScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="LogIn"
+          component={LogInScreen}
+          options={{ headerShown: false }}
+        />
+      </Stack.Navigator>
+    );
+  }
+
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{ headerShown: false, gestureEnabled: false }}
+      />
+      <Stack.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Announcement"
+        component={AnnouncementScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="AnnounceDetail"
+        component={AnnounceDetailScreen}
+        options={{ presentation: "modal", headerShown: false }}
+      />
+      <Stack.Screen
+        name="Tasmik"
+        component={TasmikScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="TasmikDetail"
+        component={TasmikDetailScreen}
+        options={{ presentation: "modal", headerShown: false }}
+      />
+      <Stack.Screen
+        name="Report"
+        component={ReportScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ReportDetail"
+        component={ReportDetailScreen}
+        options={{ presentation: "modal", headerShown: false }}
+      />
+    </Stack.Navigator>
+  );
+}
+
+export default () => {
   return (
     <NavigationContainer>
       <Provider store={store}>
-        <Stack.Navigator>
-          <Stack.Screen
-            name="SplashScreen"
-            component={SplashScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="LogIn"
-            component={LogInScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Home"
-            component={HomeScreen}
-            options={{ headerShown: false, gestureEnabled: false }}
-          />
-          <Stack.Screen
-            name="Profile"
-            component={ProfileScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Announcement"
-            component={AnnouncementScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="AnnounceDetail"
-            component={AnnounceDetailScreen}
-            options={{ presentation: "modal", headerShown: false }}
-          />
-          <Stack.Screen
-            name="Tasmik"
-            component={TasmikScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="TasmikDetail"
-            component={TasmikDetailScreen}
-            options={{ presentation: "modal", headerShown: false }}
-          />
-          <Stack.Screen
-            name="Report"
-            component={ReportScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="ReportDetail"
-            component={ReportDetailScreen}
-            options={{ presentation: "modal", headerShown: false }}
-          />
-        </Stack.Navigator>
+        <App />
       </Provider>
     </NavigationContainer>
   );
-}
+};

@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import SafeViewAndroid from "../components/SafeViewAndroid";
 import {
   ArrowLeftOnRectangleIcon,
@@ -18,9 +18,34 @@ import {
 } from "react-native-heroicons/outline";
 import { useNavigation } from "@react-navigation/native";
 import ScheduleCard from "../components/ScheduleCard";
+import { auth, db } from "../firebase";
+import { signOut } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 
-const HomeScreen = () => {
+function HomeScreen() {
   const navigation = useNavigation();
+  const [user, setUser] = useState("");
+
+  useEffect(() => {
+    getDoc(doc(db, "users", auth.currentUser.uid)).then((snapshot) => {
+      if (snapshot.exists) {
+        setUser(snapshot.data());
+        console.log(user);
+      } else {
+        console.log("User does not exists");
+      }
+    });
+  }, []);
+
+  const logOut = () => {
+    signOut(auth)
+      .then(() => {
+        console.log("LogOut");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   const alertLogOut = () => {
     Alert.alert("Log Out", "Are you sure you want to log out?", [
@@ -29,7 +54,7 @@ const HomeScreen = () => {
         onPress: null,
         style: "cancel",
       },
-      { text: "OK", onPress: () => navigation.navigate("LogIn") },
+      { text: "OK", onPress: () => logOut() },
     ]);
   };
 
@@ -49,9 +74,11 @@ const HomeScreen = () => {
             <ArrowLeftOnRectangleIcon size={32} color="#3A5311" />
           </TouchableOpacity>
         </View>
-        <Text className="text-lg font-bold text-[#728C69]">
-          Welcome, <Text className="text-[#3A5311]">Izzudin Zamri</Text>
-        </Text>
+        <View>
+          <Text className="text-lg font-bold text-[#728C69]">
+            Welcome, <Text className="text-[#3A5311]">{user.name}</Text>
+          </Text>
+        </View>
       </View>
 
       {/* Schedule */}
@@ -130,7 +157,7 @@ const HomeScreen = () => {
             onPress={() => navigation.navigate("Profile")}
           >
             <View className="h-full justify-center items-center">
-              <UserIcon size={30} color="#728C69" />
+              <UserIcon size={30} color="#74B49B" />
             </View>
           </TouchableOpacity>
           <TouchableOpacity
@@ -138,7 +165,7 @@ const HomeScreen = () => {
             onPress={() => navigation.navigate("Home")}
           >
             <View className="h-full justify-center items-center">
-              <HomeIcon size={30} color="#3A5311" fill="#728C69" />
+              <HomeIcon size={30} color="#3A5311" />
             </View>
           </TouchableOpacity>
           <TouchableOpacity
@@ -146,13 +173,13 @@ const HomeScreen = () => {
             onPress={() => navigation.navigate("Tasmik")}
           >
             <View className="h-full justify-center items-center">
-              <CalendarDaysIcon size={30} color="#728C69" />
+              <CalendarDaysIcon size={30} color="#74B49B" />
             </View>
           </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>
   );
-};
+}
 
 export default HomeScreen;
