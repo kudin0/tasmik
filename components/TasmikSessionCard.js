@@ -19,7 +19,7 @@ const TasmikSessionCard = ({
 
   return (
     <TouchableOpacity
-      className="relative bg-white mt-2 flex-row"
+      className="relative mt-2 flex-row"
       onPress={() => {
         navigation.navigate("TasmikDetail", {
           id,
@@ -35,14 +35,14 @@ const TasmikSessionCard = ({
         });
       }}
     >
-      <View className="bg-[#BECBD3] justify-between items-center rounded-lg w-full flex-row p-4">
+      <View className="bg-[#ffffff] justify-between items-center rounded-lg w-full flex-row p-4 shadow shadow-black/20">
         <View>
-          <Text className="text-[#3A5311] font-bold text-lg">{title}</Text>
-          <Text className="text-[#728C69] font-semibold text-base">
+          <Text className="text-[#826aed] font-bold text-lg">{title}</Text>
+          <Text className="text-[#6c757d] font-semibold text-base">
             Date: {date}
           </Text>
         </View>
-        <AdjustmentsHorizontalIcon size={25} color="#3A5311" />
+        <AdjustmentsHorizontalIcon size={25} color="#826aed" />
       </View>
     </TouchableOpacity>
   );

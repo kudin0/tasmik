@@ -27,7 +27,7 @@ const AnnouncementScreen = () => {
         >
           <ArrowLeftIcon size={20} color="#3A5311" />
         </TouchableOpacity>
-        <Text className="text-xl font-extrabold">Announcement</Text>
+        <Text className="text-xl font-extrabold">Bulletin</Text>
       </View>
       
       <ScrollView

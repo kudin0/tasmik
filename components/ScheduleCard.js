@@ -35,12 +35,12 @@ const ScheduleCard = ({
         });
       }}
     >
-      <View className="bg-white w-full justify-center py-3 rounded-b-lg border-[#3A5311] h-[70px]">
+      <View className="bg-white w-full justify-center py-3 h-[70px]">
         <View className="mx-4">
-          <Text className="text-lg font-semibold text-[#728C69]">
+          <Text className="text-lg font-semibold text-[#212529]">
             {title}
           </Text>
-          <Text className="text-base font-semibold text-[#74B49B]">
+          <Text className="text-base text-[#6c757d]">
             Date: {date}
           </Text>
         </View>

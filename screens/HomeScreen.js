@@ -5,37 +5,77 @@ import {
   Image,
   TouchableOpacity,
   Alert,
+  ScrollView,
+  Dimensions,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import SafeViewAndroid from "../components/SafeViewAndroid";
 import {
   ArrowLeftOnRectangleIcon,
-  CalendarDaysIcon,
-  MegaphoneIcon,
-  PresentationChartLineIcon,
-  UserIcon,
+  UserCircleIcon,
   HomeIcon,
 } from "react-native-heroicons/outline";
+import {
+  BookOpenIcon,
+  MegaphoneIcon,
+  CalendarDaysIcon,
+  PresentationChartLineIcon,
+  InboxStackIcon,
+} from "react-native-heroicons/solid";
 import { useNavigation } from "@react-navigation/native";
 import ScheduleCard from "../components/ScheduleCard";
 import { auth, db } from "../firebase";
 import { signOut } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  limit,
+  query,
+} from "firebase/firestore";
 
 function HomeScreen() {
   const navigation = useNavigation();
   const [user, setUser] = useState("");
+  const [tasmikSessions, setTasmikSessions] = useState([]);
+  const [initializing, setInitializing] = useState(true);
 
   useEffect(() => {
     getDoc(doc(db, "users", auth.currentUser.uid)).then((snapshot) => {
       if (snapshot.exists) {
         setUser(snapshot.data());
-        console.log(user);
       } else {
         console.log("User does not exists");
       }
     });
   }, []);
+
+  const getTasmikSessions = async () => {
+    try {
+      const q = query(
+        collection(db, "classroom", user.classroom, "session"),
+        limit(3)
+      );
+      const data = await getDocs(q);
+      const filteredData = data.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+      setTasmikSessions(filteredData);
+      if (initializing) {
+        setInitializing(false);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (user) {
+      getTasmikSessions();
+    }
+  }, [user]);
 
   const logOut = () => {
     signOut(auth)
@@ -58,122 +98,193 @@ function HomeScreen() {
     ]);
   };
 
+  if (initializing)
+    return (
+      <View className="items-center justify-center w-screen h-screen bg-white">
+        <Image source={require("../assets/load.gif")} />
+      </View>
+    );
+
   return (
     <SafeAreaView
-      className="bg-[#BECBD3] pt-5 h-full flex"
+      className="bg-[#826aed] pt-5 h-full flex"
       style={SafeViewAndroid.AndroidSafeArea}
     >
       {/* Header */}
-      <View className="flex pt-7 mx-5">
+      <View className="flex pt-7 pb-5 px-5 bg-[#826aed]">
         <View className="flex-row">
-          <Text className="text-4xl font-extrabold text-[#3A5311]">
+          <Text className="text-4xl font-extrabold text-[#FBFAFF] pr-1">
             myTasmik
           </Text>
-          <Image source={require("../assets/logo.png")} className="w-7 h-7" />
+          <BookOpenIcon size={32} color="#ffffff" />
           <TouchableOpacity className="ml-auto" onPress={alertLogOut}>
-            <ArrowLeftOnRectangleIcon size={32} color="#3A5311" />
+            <ArrowLeftOnRectangleIcon size={32} color="#ffffff" />
           </TouchableOpacity>
         </View>
         <View>
-          <Text className="text-lg font-bold text-[#728C69]">
-            Welcome, <Text className="text-[#3A5311]">{user.name}</Text>
+          <Text className="text-lg font-bold text-[#FBFAFF]">
+            Welcome, <Text className="text-[#FBFAFF]">{user.name}</Text>
           </Text>
         </View>
       </View>
 
-      {/* Schedule */}
-      <View className="flex pt-9 mx-5">
-        <TouchableOpacity
-          className="py-5 w-full bg-[#3A5311] rounded-t-lg"
-          onPress={() => navigation.navigate("Tasmik")}
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        className="bg-[#F1F5F8] h-full"
+      >
+        {/* Announcement Card */}
+        <ScrollView
+          contentContainerStyle={{}}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          pagingEnabled
         >
-          <View className="mx-6 flex-row items-center">
-            <CalendarDaysIcon size={24} color="white" />
-            <Text className="text-white font-semibold text-lg ml-3">
-              Your Next Tasmik
+          <View className="h-28 w-screen bg-white justify-center items-center">
+            <Text className="text-[#826aed] text-lg font-semibold">
+              Announcement #1
             </Text>
           </View>
-        </TouchableOpacity>
-        <View className="rounded-b-lg min-h-[210px] bg-white border-b border-x py-2">
-          <ScheduleCard
-            id={"0001"}
-            title={"Module 3 - Week 3"}
-            date={"##/##/####"}
-            time={"##:##"}
-            place={"BK2"}
-            details={`- Surah Al-Mulk \n- Surah Al-Kahfi`}
-          />
-          <View className="border-b" />
-          <ScheduleCard
-            id={"0001"}
-            title={"Module 4 - Week 4"}
-            date={"##/##/####"}
-            time={"##:##"}
-            place={"BK2"}
-            details={`- Surah Al-Mulk \n- Surah Al-Kahfi`}
-          />
-          <View className="border-b" />
-          <ScheduleCard
-            id={"0001"}
-            title={"Module 5 - Week 5"}
-            date={"##/##/####"}
-            time={"##:##"}
-            place={"BK2"}
-            details={`- Surah Al-Mulk \n- Surah Al-Kahfi`}
-          />
-        </View>
-      </View>
+          <View className="h-28 w-screen bg-white justify-center items-center">
+            <Text className="text-[#826aed] text-lg font-semibold">
+              Announcement #2
+            </Text>
+          </View>
+          <View className="h-28 w-screen bg-white justify-center items-center">
+            <Text className="text-[#826aed] text-lg font-semibold">
+              Announcement #3
+            </Text>
+          </View>
+          <View className="h-28 w-screen bg-white justify-center items-center">
+            <Text className="text-[#826aed] text-lg font-semibold">
+              Announcement #4
+            </Text>
+          </View>
+        </ScrollView>
 
-      {/* Button */}
-      <View className="flex-row pt-12 mx-6 justify-between">
-        <TouchableOpacity
-          className="h-24 w-24 bg-[#3A5311] justify-center items-center rounded-lg drop-shadow-lg"
-          onPress={() => navigation.navigate("Tasmik")}
-        >
-          <CalendarDaysIcon size={55} color="white" />
-          <Text className="text-white font-semibold text-sm">Tasmik</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          className="h-24 w-24 bg-[#3A5311] justify-center items-center rounded-lg drop-shadow-lg"
-          onPress={() => navigation.navigate("Announcement")}
-        >
-          <MegaphoneIcon size={55} color="white" />
-          <Text className="text-white font-semibold text-sm">Announcement</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          className="h-24 w-24 bg-[#3A5311] justify-center items-center rounded-lg drop-shadow-lg"
-          onPress={() => navigation.navigate("Report")}
-        >
-          <PresentationChartLineIcon size={55} color="white" />
-          <Text className="text-white font-semibold text-sm">Report</Text>
-        </TouchableOpacity>
-      </View>
+        {/* Schedule */}
+        <View className="flex pt-4 px-5 shadow shadow-black/20">
+          <TouchableOpacity
+            className="py-5 w-full bg-[#826aed] rounded-t-2xl"
+            onPress={() => navigation.navigate("Tasmik")}
+          >
+            <View className="mx-6 flex-row items-center">
+              <CalendarDaysIcon size={24} color="white" />
+              <Text className="text-white font-semibold text-lg ml-3">
+                Your Next Tasmik
+              </Text>
+            </View>
+          </TouchableOpacity>
+          <View className="rounded-b-2xl min-h-[60px] bg-white py-3">
+            {tasmikSessions.map((tasmik, index) => (
+              <View key={tasmik.id}>
+                <ScheduleCard
+                  id={tasmik.id}
+                  title={tasmik.title}
+                  date={tasmik.date}
+                  time={tasmik.time}
+                  place={tasmik.place}
+                  details={tasmik.details}
+                />
+                {index != tasmikSessions.length - 1 ? (
+                  <View className="border-b border-gray-400" />
+                ) : null}
+              </View>
+            ))}
+          </View>
+        </View>
+
+        {/* Features */}
+        <View className="mx-6 pt-7">
+          <Text className="font-bold text-xl text-[#212529]">Features</Text>
+        </View>
+        <View className="">
+          <ScrollView
+            contentContainerStyle={{
+              paddingHorizontal: 15,
+              paddingTop: 10,
+            }}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+          >
+            <TouchableOpacity
+              className="h-24 w-28 items-center justify-center rounded-2xl mx-2 "
+              onPress={() => navigation.navigate("Tasmik")}
+            >
+              <View className="rounded-full bg-[#ffffff] p-3 shadow-sm">
+                <CalendarDaysIcon size={45} color="#d62828" />
+              </View>
+              <Text className="text-[#212529] font-semibold text-base">
+                Attendance
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              className="h-24 w-28 items-center justify-center rounded-2xl mx-2 "
+              onPress={() => navigation.navigate("Announcement")}
+            >
+              <View className="rounded-full bg-[#ffffff] p-3 shadow-sm">
+                <MegaphoneIcon size={45} color="#3a86ff" />
+              </View>
+              <Text className="text-[#212529] font-semibold text-base">
+                Announcement
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              className="h-24 w-28 items-center justify-center rounded-2xl mx-2 "
+              onPress={() => navigation.navigate("Report")}
+            >
+              <View className="rounded-full bg-[#ffffff] p-3 shadow-sm">
+                <PresentationChartLineIcon size={45} color="#ffbe0b" />
+              </View>
+              <Text className="text-[#212529] font-semibold text-base">
+                Report
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              className="h-24 w-28 items-center justify-center rounded-2xl mx-2 "
+              onPress={null}
+            >
+              <View className="rounded-full bg-[#ffffff] p-3 shadow-sm">
+                <InboxStackIcon size={45} color="#588157" />
+              </View>
+              <Text className="text-[#212529] font-semibold text-base">
+                Apply Leave
+              </Text>
+            </TouchableOpacity>
+          </ScrollView>
+        </View>
+        <View className="my-20 justify-center items-center">
+          <Text className="text-center text-base font-semibold">{`Made by\nMuhammad Izzudin bin Zamri\nA182956`}</Text>
+        </View>
+      </ScrollView>
 
       {/* Bottom Navigation */}
-      <View className="absolute inset-x-0 bottom-0 h-20 bg-white drop-shadow-lg border-t border-gray-300">
-        <View className="flex-row justify-between mx-16">
+      <View className="absolute inset-x-0 bottom-0 h-[90px] pb-3 bg-white shadow shadow-black/10">
+        <View className="flex-row justify-between px-14 pt-[6px]">
           <TouchableOpacity
             className=""
             onPress={() => navigation.navigate("Profile")}
           >
-            <View className="h-full justify-center items-center">
-              <UserIcon size={30} color="#74B49B" />
+            <View className="h-full items-center space-y-1">
+              <UserCircleIcon size={30} color="#6c757d" />
+              <Text className="text-xs text-[#6c757d]">Account</Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity
             className=""
             onPress={() => navigation.navigate("Home")}
           >
-            <View className="h-full justify-center items-center">
-              <HomeIcon size={30} color="#3A5311" />
+            <View className="h-full items-center space-y-1">
+              <HomeIcon size={30} color="#826aed" />
+              <Text className="text-xs text-[#826aed]">Home</Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity
             className=""
             onPress={() => navigation.navigate("Tasmik")}
           >
-            <View className="h-full justify-center items-center">
-              <CalendarDaysIcon size={30} color="#74B49B" />
+            <View className="h-full items-center space-y-1">
+              <CalendarDaysIcon size={30} color="#6c757d" />
+              <Text className="text-xs text-[#6c757d]">Attendance</Text>
             </View>
           </TouchableOpacity>
         </View>

@@ -23,17 +23,20 @@ const SplashScreen = () => {
           source={require("../assets/bg.png")}
           className="w-full bg-gray-300 h-[500px]"
         />
-        <View className="-top-[110px] h-full bg-white rounded-t-xl items-center justify-start">
-          <Text className="text-[#3A5311] font-extrabold text-5xl top-[25px]">
+        <View className="-top-[110px] h-full bg-[#F1F5F8] rounded-t-2xl items-center justify-start shadow shadow-black/10">
+          <Text className="text-[#826aed] font-extrabold text-5xl top-[25px]">
             myTasmik
           </Text>
-          <Text className="pt-[35px] text-2xl font-bold text-[#728C69]">
+          <Text className="pt-[35px] text-2xl font-bold text-[#212529]">
             Welcome to myTasmik App
           </Text>
-          <Text className="pt-[60px] pb-[100px] text-2xl font-semibold text-center text-[#74B49B] max-w-[300px]">
+          <Text className="pt-[60px] pb-[100px] text-2xl font-semibold text-center text-[#6c757d] max-w-[300px]">
             Mobile App for IPT Student's Quran Memorization
           </Text>
-          <TouchableOpacity onPress={() => navigation.navigate("LogIn")} className="w-[270px] rounded-lg p-3 bg-[#3A5311]">
+          <TouchableOpacity
+            className="w-[270px] rounded-xl p-3 bg-[#826aed] shadow shadow-black/30"
+            onPress={() => navigation.navigate("LogIn")}
+          >
             <Text className="text-center text-white text-2xl font-bold">
               Log In
             </Text>

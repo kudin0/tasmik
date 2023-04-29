@@ -4,8 +4,9 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ScrollView,
+  Image,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { ArrowLeftIcon } from "react-native-heroicons/solid";
 import SafeViewAndroid from "../components/SafeViewAndroid";
@@ -14,122 +15,185 @@ import {
   CalendarDaysIcon,
   CalendarIcon,
   HomeIcon,
+  UserCircleIcon,
   UserIcon,
 } from "react-native-heroicons/outline";
 import TasmikSessionCard from "../components/TasmikSessionCard";
+import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import { auth, db } from "../firebase";
 
 const TasmikScreen = () => {
   const navigation = useNavigation();
 
+  const [user, setUser] = useState("");
+  const [classroom, setClassroom] = useState("");
+  const [tasmikSessions, setTasmikSessions] = useState([]);
+  const [initializing, setInitializing] = useState(true);
+
+  useEffect(() => {
+    getDoc(doc(db, "users", auth.currentUser.uid)).then((snapshot) => {
+      if (snapshot.exists) {
+        setUser(snapshot.data());
+      } else {
+        console.log("User does not exists");
+      }
+    });
+  }, []);
+
+  const getTasmikSessions = async () => {
+    try {
+      const data = await getDocs(
+        collection(db, "classroom", user.classroom, "session")
+      );
+      const filteredData = data.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+      setTasmikSessions(filteredData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getClassroomInfo = () => {
+    getDoc(doc(db, "classroom", user.classroom)).then((snapshot) => {
+      if (snapshot.exists) {
+        setClassroom(snapshot.data());
+        if (initializing) {
+          setInitializing(false);
+        }
+      } else {
+        console.log("User does not exists");
+      }
+    });
+  };
+
+  useEffect(() => {
+    if (user) {
+      getClassroomInfo();
+      getTasmikSessions();
+    }
+  }, [user]);
+
+  if (initializing)
+    return (
+      <View className="items-center justify-center w-screen h-screen bg-white">
+        <Image source={require("../assets/load.gif")} />
+      </View>
+    );
+
   return (
     <SafeAreaView
-      className="bg-white h-full"
+      className="pt-7 bg-[#826aed] h-full"
       style={SafeViewAndroid.AndroidSafeArea}
     >
       {/* Header */}
-      <View className="flex-row relative h-12 bg-white drop-shadow-2xl items-center justify-center border-b border-gray-300">
+      <View className="flex-row relative h-12 bg-[#826aed] drop-shadow-2xl items-center justify-center border-b border-gray-300">
         <TouchableOpacity
           onPress={navigation.goBack}
           className="absolute left-5 p-2 rounded-full"
         >
-          <ArrowLeftIcon size={20} color="#3A5311" />
+          <ArrowLeftIcon size={20} color="#ffffff" />
         </TouchableOpacity>
-        <Text className="text-xl font-extrabold">Tasmik Session</Text>
+        <Text className="text-xl text-[#ffffff] font-extrabold">
+          Attendance
+        </Text>
       </View>
 
-      {/* Tasmik Info */}
-      <View className="flex-row justify-between mx-5 pt-3">
-        <View className="space-y-1">
-          <Text className="text-[#728C69] font-bold text-base">
-            Dr. Karim Abd Razak
-          </Text>
-          <Text className="text-[#74B49B] text-base">Lecturer</Text>
+      <View className="bg-[#F1F5F8]">
+        {/* Tasmik Info */}
+        <View className="flex-row justify-between px-5 py-3">
+          <View className="space-y-1">
+            <Text className="text-[#826aed] font-bold text-lg">
+              {classroom.lecturer_name}
+            </Text>
+            <Text className="text-[#6c757d] font-semibold text-base">
+              Lecturer
+            </Text>
+          </View>
+          <View className="items-end space-y-1">
+            <Text className="text-[#826aed] font-bold text-lg">
+              {classroom.term}
+            </Text>
+            <Text className="text-[#6c757d] font-semibold text-base">Term</Text>
+          </View>
         </View>
-        <View className="items-end space-y-1">
-          <Text className="text-[#728C69] font-bold text-base">
-            Sem 1 2022/2023
-          </Text>
-          <Text className="text-[#74B49B] text-base">Term</Text>
-        </View>
-      </View>
 
-      {/* Top */}
-      <View className="pt-3 space-y-3">
-        <View className="flex-row items-center justify-evenly">
-          <TouchableOpacity className="pb-2 border-b-2 border-[#3A5311]">
-            <Text className="text-base text-[#3A5311] font-bold">
-              Next Tasmik
+        {/* Top */}
+        <View className="py-3 space-y-3">
+          <View className="flex-row items-center justify-evenly">
+            <TouchableOpacity className="pb-2 border-b-2 border-[#826aed]">
+              <Text className="text-base text-[#826aed] font-bold">
+                Next Tasmik
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity className="pb-2">
+              <Text className="text-base text-[#6c757d] font-bold">
+                Past Tasmik
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View className="flex-row mx-6 items-center justify-between space-x-3">
+            <Text className="text-base text-[#6c757d] font-semibold">
+              Timeline
             </Text>
-          </TouchableOpacity>
-          <TouchableOpacity className="pb-2">
-            <Text className="text-base text-[#728C69] font-bold">
-              Past Tasmik
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <View className="flex-row mx-6 items-center justify-between space-x-3">
-          <Text className="text-base text-[#728C69] font-semibold">
-            Timeline
-          </Text>
-          <TouchableOpacity className="border border-[#728C69] px-2 py-1 rounded-full flex-row items-center space-x-1">
-            <CalendarIcon size={20} color="#728C69" />
-            <Text className="text-base text-[#728C69] font-semibold">
-              Tasmik Balance
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity className="border border-[#728C69] px-2 py-1 rounded-full flex-row items-center space-x-1">
-            <ArrowPathIcon size={20} color="#728C69" />
-            <Text className="text-base text-[#728C69] font-semibold">
-              Refresh
-            </Text>
-          </TouchableOpacity>
+            <TouchableOpacity className="border border-[#728C69] px-2 py-1 rounded-full flex-row items-center space-x-1">
+              <CalendarIcon size={20} color="#6c757d" />
+              <Text className="text-base text-[#6c757d] font-semibold">
+                Tasmik Balance
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity className="border border-[#6c757d] px-2 py-1 rounded-full flex-row items-center space-x-1">
+              <ArrowPathIcon size={20} color="#6c757d" />
+              <Text className="text-base text-[#6c757d] font-semibold">
+                Refresh
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
 
       {/* content */}
-      <ScrollView className="mx-5 space-y-2 mt-2">
-        <TasmikSessionCard
-          id={"0001"}
-          title={"Module 3 - Week 3"}
-          date={"##/##/####"}
-          time={"##:##"}
-          place={"BK2"}
-          details={`- Surah Al-Mulk \n- Surah Al-Kahfi`}
-        />
-        <TasmikSessionCard
-          id={"0001"}
-          title={"Module 4 - Week 4"}
-          date={"##/##/####"}
-          time={"##:##"}
-          place={"BK2"}
-        />
+      <ScrollView className="px-5 space-y-2 bg-[#F1F5F8] h-full">
+        {tasmikSessions.map((tasmik) => (
+          <TasmikSessionCard
+            title={tasmik.title}
+            date={tasmik.date}
+            time={tasmik.time}
+            place={tasmik.place}
+            details={tasmik.details}
+          />
+        ))}
       </ScrollView>
 
       {/* Bottom Navigation */}
-      <View className="absolute inset-x-0 bottom-0 h-20 bg-white drop-shadow-lg border-t border-gray-300">
-        <View className="flex-row justify-between mx-16">
+      <View className="absolute inset-x-0 bottom-0 h-[90px] pb-3 bg-white shadow shadow-black/10">
+        <View className="flex-row justify-between px-14 pt-[6px]">
           <TouchableOpacity
             className=""
             onPress={() => navigation.navigate("Profile")}
           >
-            <View className="h-full justify-center items-center">
-              <UserIcon size={30} color="#728C69" />
+            <View className="h-full items-center space-y-1">
+              <UserCircleIcon size={30} color="#6c757d" />
+              <Text className="text-xs text-[#6c757d]">Account</Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity
             className=""
             onPress={() => navigation.navigate("Home")}
           >
-            <View className="h-full justify-center items-center">
-              <HomeIcon size={30} color="#728C69" />
+            <View className="h-full items-center space-y-1">
+              <HomeIcon size={30} color="#6c757d" />
+              <Text className="text-xs text-[#6c757d]">Home</Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity
             className=""
             onPress={() => navigation.navigate("Tasmik")}
           >
-            <View className="h-full justify-center items-center">
-              <CalendarDaysIcon size={30} color="#3A5311" fill="#728C69" />
+            <View className="h-full items-center space-y-1">
+              <CalendarDaysIcon size={30} color="#826aed" />
+              <Text className="text-xs text-[#826aed]">Attendance</Text>
             </View>
           </TouchableOpacity>
         </View>

@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     user: {
-        id: null,
+        uid: null,
         name: null,
         matric: null,
         dob: null,
@@ -10,6 +10,9 @@ const initialState = {
         year: null,
         course: null,
         nationality: null,
+        type: null,
+        classroom: null,
+        picture: null,
     },
 };
 
