@@ -16,7 +16,6 @@ import {
   CalendarIcon,
   HomeIcon,
   UserCircleIcon,
-  UserIcon,
 } from "react-native-heroicons/outline";
 import TasmikSessionCard from "../components/TasmikSessionCard";
 import {
@@ -29,7 +28,7 @@ import {
 } from "firebase/firestore";
 import { auth, db } from "../firebase";
 
-const TasmikScreen = () => {
+const TasmikPastScreen = () => {
   const navigation = useNavigation();
 
   const [user, setUser] = useState("");
@@ -51,7 +50,7 @@ const TasmikScreen = () => {
   const getTasmikSessions = async () => {
     const q = query(
       collection(db, "classroom", user.classroom, "session"),
-      where("past", "==", "no")
+      where("past", "==", "yes")
     );
     try {
       const data = await getDocs(q);
@@ -136,19 +135,19 @@ const TasmikScreen = () => {
         {/* Top */}
         <View className="py-3 space-y-3">
           <View className="flex-row items-center justify-evenly">
-            <TouchableOpacity className="pb-2 border-b-2 border-[#826aed]">
+            <TouchableOpacity className="pb-2">
               <Text
-                className="text-base text-[#826aed] font-bold"
+                className="text-base text-[#6c757d] font-bold"
                 onPress={() => navigation.navigate("Tasmik")}
               >
                 Next Tasmik
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity className="pb-2">
-              <Text
-                className="text-base text-[#6c757d] font-bold"
-                onPress={() => navigation.navigate("TasmikPast")}
-              >
+            <TouchableOpacity
+              className="pb-2 border-b-2 border-[#826aed]"
+              onPress={() => navigation.navigate("TasmikPast")}
+            >
+              <Text className="text-base text-[#826aed] font-bold">
                 Past Tasmik
               </Text>
             </TouchableOpacity>
@@ -226,4 +225,4 @@ const TasmikScreen = () => {
   );
 };
 
-export default TasmikScreen;
+export default TasmikPastScreen;

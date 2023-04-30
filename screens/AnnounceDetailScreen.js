@@ -36,14 +36,14 @@ const AnnounceDetailScreen = () => {
   return (
     <>
       <SafeAreaView className="bg-white h-full" style={SafeViewAndroid.AndroidSafeArea}>
-        <View className="flex-row relative h-12 bg-white drop-shadow-2xl items-center justify-center border-b border-gray-300">
+        <View className="flex-row relative py-4 bg-white items-center justify-center border-b border-gray-300">
           <TouchableOpacity
             onPress={navigation.goBack}
             className="absolute left-5 p-2 rounded-full"
           >
-            <ArrowLeftIcon size={20} color="#3A5311" />
+            <ArrowLeftIcon size={20} color="#212529" />
           </TouchableOpacity>
-          <Text className="text-xl font-extrabold">Announcement</Text>
+          <Text className="text-xl font-extrabold text-[#212529]">Announcement</Text>
         </View>
         <ScrollView>
           <View className="bg-[#BECBD3] h-28 justify-center items-center mb-2">

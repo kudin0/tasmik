@@ -55,7 +55,7 @@ const ReportDetailScreen = () => {
       style={SafeViewAndroid.AndroidSafeArea}
     >
       {/* Header */}
-      <View className="flex-row relative bg-white drop-shadow-2xl items-center justify-center border-b border-gray-300 py-4">
+      <View className="flex-row relative bg-white items-center justify-center border-b border-gray-300 py-4">
         <TouchableOpacity
           onPress={navigation.goBack}
           className="absolute left-5 p-2 rounded-full"

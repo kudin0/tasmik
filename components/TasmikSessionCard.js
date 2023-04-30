@@ -37,7 +37,7 @@ const TasmikSessionCard = ({
     >
       <View className="bg-[#ffffff] justify-between items-center rounded-lg w-full flex-row p-4 shadow shadow-black/20">
         <View>
-          <Text className="text-[#826aed] font-bold text-lg">{title}</Text>
+          <Text className="text-[#212529] font-bold text-lg">{title}</Text>
           <Text className="text-[#6c757d] font-semibold text-base">
             Date: {date}
           </Text>

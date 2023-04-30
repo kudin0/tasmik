@@ -41,39 +41,39 @@ const TasmikDetailScreen = () => {
         style={SafeViewAndroid.AndroidSafeArea}
       >
         {/* Header */}
-        <View className="flex-row relative bg-white drop-shadow-2xl items-center justify-center border-b border-gray-300 py-4">
+        <View className="flex-row relative bg-white items-center justify-center border-b border-gray-300 py-4">
           <TouchableOpacity
             onPress={navigation.goBack}
             className="absolute left-5 p-2 rounded-full"
           >
-            <ArrowLeftIcon size={20} color="#3A5311" />
+            <ArrowLeftIcon size={20} color="#212529" />
           </TouchableOpacity>
-          <Text className="text-xl font-extrabold">Tasmik Details</Text>
+          <Text className="text-xl font-extrabold text-[#212529]">Tasmik Details</Text>
         </View>
 
         <ScrollView className="mx-5 pt-3 space-y-3">
-          <Text className=" text-xl font-bold text-[#3A5311]">{title}</Text>
+          <Text className=" text-xl font-bold text-[#826aed]">{title}</Text>
           <View className="space-y-1">
-            <Text className="text-[#74B49B] text-lg">
+            <Text className="text-[#6c757d] text-lg">
               Date & Time
             </Text>
-            <Text className="text-[#728C69] text-lg font-semibold">
+            <Text className="text-[#212529] text-lg font-semibold">
               {date} at {time}
             </Text>
           </View>
           <View className="space-y-1">
-            <Text className="text-[#74B49B] text-lg">
+            <Text className="text-[#6c757d] text-lg">
               Place
             </Text>
-            <Text className="text-[#728C69] text-lg font-semibold">
+            <Text className="text-[#212529] text-lg font-semibold">
               {place}
             </Text>
           </View>
           <View className="space-y-1">
-            <Text className="text-[#74B49B] text-lg">
+            <Text className="text-[#6c757d] text-lg">
               Surah/ Juzu'
             </Text>
-            <Text className="text-[#728C69] text-lg font-semibold">
+            <Text className="text-[#212529] text-lg font-semibold">
               {details}
             </Text>
           </View>

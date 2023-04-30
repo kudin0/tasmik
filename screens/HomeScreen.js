@@ -8,7 +8,7 @@ import {
   ScrollView,
   Dimensions,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import SafeViewAndroid from "../components/SafeViewAndroid";
 import {
   ArrowLeftOnRectangleIcon,
@@ -33,7 +33,9 @@ import {
   getDocs,
   limit,
   query,
+  where,
 } from "firebase/firestore";
+import AnnouncementCard from "../components/AnnouncementCard";
 
 function HomeScreen() {
   const navigation = useNavigation();
@@ -55,6 +57,7 @@ function HomeScreen() {
     try {
       const q = query(
         collection(db, "classroom", user.classroom, "session"),
+        where("past", "==", "no"),
         limit(3)
       );
       const data = await getDocs(q);
@@ -98,6 +101,18 @@ function HomeScreen() {
     ]);
   };
 
+  const scrollViewRef = useRef(null);
+
+  const onScrollEndDrag = (event) => {
+    const contentOffsetX = event.nativeEvent.contentOffset.x;
+    const contentWidth = event.nativeEvent.contentSize.width;
+    const frameWidth = event.nativeEvent.layoutMeasurement.width;
+    const maxOffsetX = contentWidth - frameWidth;
+    if (contentOffsetX >= maxOffsetX) {
+      scrollViewRef.current.scrollTo({ x: 0, y: 0, animated: true });
+    }
+  };
+
   if (initializing)
     return (
       <View className="items-center justify-center w-screen h-screen bg-white">
@@ -138,27 +153,33 @@ function HomeScreen() {
           horizontal
           showsHorizontalScrollIndicator={false}
           pagingEnabled
+          ref={scrollViewRef}
+          onScrollEndDrag={onScrollEndDrag}
         >
-          <View className="h-28 w-screen bg-white justify-center items-center">
-            <Text className="text-[#826aed] text-lg font-semibold">
-              Announcement #1
-            </Text>
-          </View>
-          <View className="h-28 w-screen bg-white justify-center items-center">
-            <Text className="text-[#826aed] text-lg font-semibold">
-              Announcement #2
-            </Text>
-          </View>
-          <View className="h-28 w-screen bg-white justify-center items-center">
-            <Text className="text-[#826aed] text-lg font-semibold">
-              Announcement #3
-            </Text>
-          </View>
-          <View className="h-28 w-screen bg-white justify-center items-center">
-            <Text className="text-[#826aed] text-lg font-semibold">
-              Announcement #4
-            </Text>
-          </View>
+          <AnnouncementCard
+            id={"0001"}
+            screen={"home"}
+            title={"Announcement #1"}
+            byName={"Dr. Karim Abd Razak"}
+            date={"##/##/####"}
+            details={`Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tempor, mi eu accumsan imperdiet, sem nibh malesuada magna, ac placerat leo orci ut arcu. Aliquam porta sodales libero, a mollis velit pulvinar vel. Suspendisse nec dui diam. Duis non velit vel libero fermentum blandit a ut eros. Morbi laoreet ex blandit nunc pharetra porttitor. \nInteger a condimentum arcu. Pellentesque faucibus fermentum dapibus. Curabitur laoreet accumsan vestibulum. Maecenas commodo eget lorem blandit tempus.`}
+          />
+          <AnnouncementCard
+            id={"0002"}
+            screen={"home"}
+            title={"Announcement #2"}
+            byName={"Dr. Karim Abd Razak"}
+            date={"##/##/####"}
+            details={`Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tempor, mi eu accumsan imperdiet, sem nibh malesuada magna, ac placerat leo orci ut arcu. Aliquam porta sodales libero, a mollis velit pulvinar vel. Suspendisse nec dui diam. Duis non velit vel libero fermentum blandit a ut eros. Morbi laoreet ex blandit nunc pharetra porttitor. \nInteger a condimentum arcu. Pellentesque faucibus fermentum dapibus. Curabitur laoreet accumsan vestibulum. Maecenas commodo eget lorem blandit tempus.`}
+          />
+          <AnnouncementCard
+            id={"0003"}
+            screen={"home"}
+            title={"Announcement #3"}
+            byName={"Dr. Karim Abd Razak"}
+            date={"##/##/####"}
+            details={`Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tempor, mi eu accumsan imperdiet, sem nibh malesuada magna, ac placerat leo orci ut arcu. \n\nAliquam porta sodales libero, a mollis velit pulvinar vel. Suspendisse nec dui diam. Duis non velit vel libero fermentum blandit a ut eros. Morbi laoreet ex blandit nunc pharetra porttitor. \nInteger a condimentum arcu. Pellentesque faucibus fermentum dapibus. Curabitur laoreet accumsan vestibulum. Maecenas commodo eget lorem blandit tempus.`}
+          />
         </ScrollView>
 
         {/* Schedule */}

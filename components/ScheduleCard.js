@@ -35,7 +35,7 @@ const ScheduleCard = ({
         });
       }}
     >
-      <View className="bg-white w-full justify-center py-3 h-[70px]">
+      <View className="bg-white w-full justify-center h-[70px]">
         <View className="mx-4">
           <Text className="text-lg font-semibold text-[#212529]">
             {title}

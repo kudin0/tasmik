@@ -52,7 +52,7 @@ const ProfileScreen = () => {
       style={SafeViewAndroid.AndroidSafeArea}
     >
       {/* header */}
-      <View className="flex-row relative h-12 bg-[#826aed] drop-shadow-2xl items-center justify-center border-b border-gray-300">
+      <View className="flex-row relative h-12 bg-[#826aed] items-center justify-center border-b border-gray-300">
         <TouchableOpacity
           onPress={navigation.goBack}
           className="absolute left-5 p-2 rounded-full"
@@ -77,7 +77,7 @@ const ProfileScreen = () => {
           <Text className="pt-2 text-[#826aed] font-bold text-2xl">
             {user.name}
           </Text>
-          <Text className="pt-1 text-[#6c757d] font-semibold text-lg">
+          <Text className="pt-1 text-[#212529] font-bold text-lg">
             {user.matric}
           </Text>
         </View>

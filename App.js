@@ -14,6 +14,7 @@ import TasmikDetailScreen from "./screens/TasmikDetailScreen";
 import ReportScreen from "./screens/ReportScreen";
 import ReportDetailScreen from "./screens/ReportDetailScreen";
 import { auth } from "./firebase";
+import TasmikPastScreen from "./screens/TasmikPastScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -77,6 +78,11 @@ function App() {
       <Stack.Screen
         name="Tasmik"
         component={TasmikScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="TasmikPast"
+        component={TasmikPastScreen}
         options={{ headerShown: false }}
       />
       <Stack.Screen
