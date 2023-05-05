@@ -58,7 +58,9 @@ const LogInScreen = () => {
             >
               <ArrowLeftIcon size={20} color="#ffffff" />
             </TouchableOpacity>
-            <Text className="text-xl text-[#ffffff] font-extrabold">Login Page</Text>
+            <Text className="text-xl text-[#ffffff] font-extrabold">
+              Login Page
+            </Text>
           </View>
 
           <View className="bg-[#F1F5F8] h-full">
@@ -105,16 +107,14 @@ const LogInScreen = () => {
                 </Text>
               </TouchableOpacity>
             </View>
-            <View className="mt-[100px] items-center">
-              <TouchableOpacity
-                onPress={() => loginUser(email, password)}
-                className="w-[270px] rounded-xl p-3 bg-[#826aed] shadow shadow-black/30"
-              >
-                <Text className="text-center text-white text-2xl font-bold">
-                  Log In
-                </Text>
-              </TouchableOpacity>
-            </View>
+            <TouchableOpacity
+              onPress={() => loginUser(email, password)}
+              className="w-[270px] mt-[100px] items-center self-center bg-[#826aed] shadow shadow-black/30 rounded-xl p-3"
+            >
+              <Text className="text-center text-white text-2xl font-bold">
+                Log In
+              </Text>
+            </TouchableOpacity>
           </View>
         </SafeAreaView>
       </TouchableWithoutFeedback>

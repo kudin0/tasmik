@@ -35,7 +35,10 @@ const AnnounceDetailScreen = () => {
 
   return (
     <>
-      <SafeAreaView className="bg-white h-full" style={SafeViewAndroid.AndroidSafeArea}>
+      <SafeAreaView
+        className="bg-white h-full"
+        style={SafeViewAndroid.AndroidSafeArea}
+      >
         <View className="flex-row relative py-4 bg-white items-center justify-center border-b border-gray-300">
           <TouchableOpacity
             onPress={navigation.goBack}
@@ -43,17 +46,21 @@ const AnnounceDetailScreen = () => {
           >
             <ArrowLeftIcon size={20} color="#212529" />
           </TouchableOpacity>
-          <Text className="text-xl font-extrabold text-[#212529]">Announcement</Text>
+          <Text className="text-xl font-extrabold text-[#212529]">
+            Announcement
+          </Text>
         </View>
         <ScrollView>
-          <View className="bg-[#BECBD3] h-28 justify-center items-center mb-2">
-            <Text className="text-base font-bold text-[#3A5311]">{title}</Text>
+          <View className="bg-[#826aed] h-28 justify-center items-center">
+            <Text className="text-lg font-bold text-[#FBFAFF]">{title}</Text>
           </View>
-          <View className="mx-5 space-y-2 pb-2 mb-2 border-b border-[#3A5311]">
-            <Text className="text-[#728C69] text-sm font-semibold">Posted by {byName}</Text>
-            <Text className="text-[#74B49B] text-sm">{date}</Text>
+          <View className="mx-5 space-y-2 py-2 mb-2 border-b border-[#6c757d]">
+            <Text className="text-[#6c757d] text-sm font-semibold">
+              Posted by {byName}
+            </Text>
+            <Text className="text-[#826aed] text-sm">{date}</Text>
           </View>
-          <Text className="mx-5 text-[#728C69] text-lg text-justify">
+          <Text className="mx-5 text-[#212529] text-lg text-justify">
             {details}
           </Text>
         </ScrollView>

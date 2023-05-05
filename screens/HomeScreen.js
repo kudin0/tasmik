@@ -32,6 +32,7 @@ import {
   getDoc,
   getDocs,
   limit,
+  orderBy,
   query,
   where,
 } from "firebase/firestore";
@@ -41,6 +42,7 @@ function HomeScreen() {
   const navigation = useNavigation();
   const [user, setUser] = useState("");
   const [tasmikSessions, setTasmikSessions] = useState([]);
+  const [announcements, setAnnouncements] = useState([]);
   const [initializing, setInitializing] = useState(true);
 
   useEffect(() => {
@@ -74,9 +76,28 @@ function HomeScreen() {
     }
   };
 
+  const getAnnouncements = async () => {
+    try {
+      const q = query(
+        collection(db, "announcement"),
+        limit(5),
+        orderBy("date", "desc")
+      );
+      const data = await getDocs(q);
+      const filteredData = data.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+      setAnnouncements(filteredData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     if (user) {
       getTasmikSessions();
+      getAnnouncements();
     }
   }, [user]);
 
@@ -156,30 +177,16 @@ function HomeScreen() {
           ref={scrollViewRef}
           onScrollEndDrag={onScrollEndDrag}
         >
-          <AnnouncementCard
-            id={"0001"}
-            screen={"home"}
-            title={"Announcement #1"}
-            byName={"Dr. Karim Abd Razak"}
-            date={"##/##/####"}
-            details={`Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tempor, mi eu accumsan imperdiet, sem nibh malesuada magna, ac placerat leo orci ut arcu. Aliquam porta sodales libero, a mollis velit pulvinar vel. Suspendisse nec dui diam. Duis non velit vel libero fermentum blandit a ut eros. Morbi laoreet ex blandit nunc pharetra porttitor. \nInteger a condimentum arcu. Pellentesque faucibus fermentum dapibus. Curabitur laoreet accumsan vestibulum. Maecenas commodo eget lorem blandit tempus.`}
-          />
-          <AnnouncementCard
-            id={"0002"}
-            screen={"home"}
-            title={"Announcement #2"}
-            byName={"Dr. Karim Abd Razak"}
-            date={"##/##/####"}
-            details={`Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tempor, mi eu accumsan imperdiet, sem nibh malesuada magna, ac placerat leo orci ut arcu. Aliquam porta sodales libero, a mollis velit pulvinar vel. Suspendisse nec dui diam. Duis non velit vel libero fermentum blandit a ut eros. Morbi laoreet ex blandit nunc pharetra porttitor. \nInteger a condimentum arcu. Pellentesque faucibus fermentum dapibus. Curabitur laoreet accumsan vestibulum. Maecenas commodo eget lorem blandit tempus.`}
-          />
-          <AnnouncementCard
-            id={"0003"}
-            screen={"home"}
-            title={"Announcement #3"}
-            byName={"Dr. Karim Abd Razak"}
-            date={"##/##/####"}
-            details={`Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tempor, mi eu accumsan imperdiet, sem nibh malesuada magna, ac placerat leo orci ut arcu. \n\nAliquam porta sodales libero, a mollis velit pulvinar vel. Suspendisse nec dui diam. Duis non velit vel libero fermentum blandit a ut eros. Morbi laoreet ex blandit nunc pharetra porttitor. \nInteger a condimentum arcu. Pellentesque faucibus fermentum dapibus. Curabitur laoreet accumsan vestibulum. Maecenas commodo eget lorem blandit tempus.`}
-          />
+          {announcements.map((announcement) => (
+            <AnnouncementCard
+              key={announcement.id}
+              screen={"home"}
+              title={announcement.title}
+              byName={announcement.by}
+              date={announcement.date}
+              details={announcement.details}
+            />
+          ))}
         </ScrollView>
 
         {/* Schedule */}
@@ -228,10 +235,10 @@ function HomeScreen() {
             showsHorizontalScrollIndicator={false}
           >
             <TouchableOpacity
-              className="h-24 w-28 items-center justify-center rounded-2xl mx-2 "
+              className="h-24 w-28 items-center justify-center rounded-2xl mx-1"
               onPress={() => navigation.navigate("Tasmik")}
             >
-              <View className="rounded-full bg-[#ffffff] p-3 shadow-sm">
+              <View className="rounded-full bg-[#ffffff] p-3 shadow-sm shadow-black/10">
                 <CalendarDaysIcon size={45} color="#d62828" />
               </View>
               <Text className="text-[#212529] font-semibold text-base">
@@ -239,10 +246,10 @@ function HomeScreen() {
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              className="h-24 w-28 items-center justify-center rounded-2xl mx-2 "
+              className="h-24 w-28 items-center justify-center rounded-2xl mx-1"
               onPress={() => navigation.navigate("Announcement")}
             >
-              <View className="rounded-full bg-[#ffffff] p-3 shadow-sm">
+              <View className="rounded-full bg-[#ffffff] p-3 shadow-sm shadow-black/10">
                 <MegaphoneIcon size={45} color="#3a86ff" />
               </View>
               <Text className="text-[#212529] font-semibold text-base">
@@ -250,10 +257,10 @@ function HomeScreen() {
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              className="h-24 w-28 items-center justify-center rounded-2xl mx-2 "
+              className="h-24 w-28 items-center justify-center rounded-2xl mx-1"
               onPress={() => navigation.navigate("Report")}
             >
-              <View className="rounded-full bg-[#ffffff] p-3 shadow-sm">
+              <View className="rounded-full bg-[#ffffff] p-3 shadow-sm shadow-black/10">
                 <PresentationChartLineIcon size={45} color="#ffbe0b" />
               </View>
               <Text className="text-[#212529] font-semibold text-base">
@@ -261,10 +268,10 @@ function HomeScreen() {
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              className="h-24 w-28 items-center justify-center rounded-2xl mx-2 "
-              onPress={null}
+              className="h-24 w-28 items-center justify-center rounded-2xl mx-1"
+              onPress={() => navigation.navigate("ApplyLeave")}
             >
-              <View className="rounded-full bg-[#ffffff] p-3 shadow-sm">
+              <View className="rounded-full bg-[#ffffff] p-3 shadow-sm shadow-black/10">
                 <InboxStackIcon size={45} color="#588157" />
               </View>
               <Text className="text-[#212529] font-semibold text-base">

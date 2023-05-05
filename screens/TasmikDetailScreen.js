@@ -48,31 +48,27 @@ const TasmikDetailScreen = () => {
           >
             <ArrowLeftIcon size={20} color="#212529" />
           </TouchableOpacity>
-          <Text className="text-xl font-extrabold text-[#212529]">Tasmik Details</Text>
+          <Text className="text-xl font-extrabold text-[#212529]">
+            Tasmik Details
+          </Text>
         </View>
 
         <ScrollView className="mx-5 pt-3 space-y-3">
           <Text className=" text-xl font-bold text-[#826aed]">{title}</Text>
           <View className="space-y-1">
-            <Text className="text-[#6c757d] text-lg">
-              Date & Time
-            </Text>
+            <Text className="text-[#6c757d] text-lg">Date & Time</Text>
             <Text className="text-[#212529] text-lg font-semibold">
               {date} at {time}
             </Text>
           </View>
           <View className="space-y-1">
-            <Text className="text-[#6c757d] text-lg">
-              Place
-            </Text>
+            <Text className="text-[#6c757d] text-lg">Place</Text>
             <Text className="text-[#212529] text-lg font-semibold">
               {place}
             </Text>
           </View>
           <View className="space-y-1">
-            <Text className="text-[#6c757d] text-lg">
-              Surah/ Juzu'
-            </Text>
+            <Text className="text-[#6c757d] text-lg">Surah/ Juzu'</Text>
             <Text className="text-[#212529] text-lg font-semibold">
               {details}
             </Text>
