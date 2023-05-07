@@ -21,8 +21,8 @@ import {
   where,
 } from "firebase/firestore";
 import { auth, db } from "../firebase";
-import { SelectList } from "react-native-dropdown-select-list";
 import DropDownPicker from "react-native-dropdown-picker";
+import moment from "moment/moment";
 
 const ApplyLeaveScreen = () => {
   const navigation = useNavigation();
@@ -34,7 +34,6 @@ const ApplyLeaveScreen = () => {
   const [selectedSession, setSelectedSession] = useState(null);
   const [leaveReason, setLeaveReason] = useState(null);
   const [leaveDetails, setLeaveDetails] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -55,7 +54,7 @@ const ApplyLeaveScreen = () => {
       );
       const data = await getDocs(q);
       const filteredData = data.docs.map((doc) => ({
-        value: doc.id,
+        value: doc.data().title,
         label: doc.data().title,
       }));
       setTasmikSessions(filteredData);
@@ -97,13 +96,20 @@ const ApplyLeaveScreen = () => {
     }
     try {
       await addDoc(collection(db, "leave_application"), {
-        user: user.uid,
+        uid: user.uid,
+        name: user.name,
+        matric: user.matric,
+        timestamp: moment().utcOffset("+8:00").format("DD-MM-YYYY hh:mm A"),
         reason: leaveReason,
         session: selectedSession,
         details: leaveDetails,
-        status: "applied",
+        status: "Applied",
         classroom: classroom.id,
       });
+      setLeaveReason("");
+      setSelectedSession("");
+      setLeaveDetails("");
+      navigation.navigate("ApplyLeaveStatus");
     } catch (error) {
       console.log(error);
     }
@@ -180,7 +186,7 @@ const ApplyLeaveScreen = () => {
               shadowOffset: { width: 0, height: 1 },
             }}
             textStyle={{
-              fontSize: 16,
+              fontSize: 17,
               color: "#212529",
             }}
             dropDownContainerStyle={{
