@@ -17,6 +17,8 @@ import { auth } from "./firebase";
 import TasmikPastScreen from "./screens/TasmikPastScreen";
 import ApplyLeaveScreen from "./screens/ApplyLeaveScreen";
 import ApplyLeaveStatusScreen from "./screens/ApplyLeaveStatusScreen";
+import ApplyLeaveDetailsScreen from "./screens/ApplyLeaveDetailsScreen";
+import LeaveApplicationScreen from "./screens/LeaveApplicationScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -90,7 +92,7 @@ function App() {
       <Stack.Screen
         name="TasmikDetail"
         component={TasmikDetailScreen}
-        options={{ presentation: "modal", headerShown: false }}
+        options={{ headerShown: false, headerShown: false }}
       />
       <Stack.Screen
         name="Report"
@@ -108,8 +110,18 @@ function App() {
         options={{ headerShown: false, animation: "none" }}
       />
       <Stack.Screen
+        name="LeaveApplication"
+        component={LeaveApplicationScreen}
+        options={{ headerShown: false, animation: "none" }}
+      />
+      <Stack.Screen
         name="ApplyLeaveStatus"
         component={ApplyLeaveStatusScreen}
+        options={{ headerShown: false, animation: "none" }}
+      />
+      <Stack.Screen
+        name="ApplyLeaveDetails"
+        component={ApplyLeaveDetailsScreen}
         options={{ headerShown: false, animation: "none" }}
       />
     </Stack.Navigator>

@@ -34,15 +34,15 @@ const AnnouncementCard = ({
           </Text>
         </View>
       ) : (
-        <View className="mt-2">
-          <View className="bg-[#BECBD3] justify-center items-center rounded-t-lg h-28 w-full">
-            <Text className="text-[#3A5311] font-bold text-lg">{title}</Text>
+        <View className="my-2">
+          <View className="bg-[#826aed] justify-center items-center rounded-t-xl h-28 w-full">
+            <Text className="text-[#ffffff] font-bold text-lg">{title}</Text>
           </View>
-          <View className="flex-row justify-between mx-5 py-2 rounded-b-lg">
-            <Text className="text-[#728C69] text-md font-semibold">
+          <View className="flex-row justify-between bg-[#ffffff] px-5 py-2 rounded-b-lg border-x border-b">
+            <Text className="text-[#6c757d] text-md font-semibold">
               {byName}
             </Text>
-            <Text className="text-[#728C69] text-md font-semibold">{date}</Text>
+            <Text className="text-[#6c757d] text-md font-semibold">{date}</Text>
           </View>
         </View>
       )}

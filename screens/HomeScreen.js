@@ -7,6 +7,7 @@ import {
   Alert,
   ScrollView,
   Dimensions,
+  ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import SafeViewAndroid from "../components/SafeViewAndroid";
@@ -22,7 +23,7 @@ import {
   PresentationChartLineIcon,
   InboxStackIcon,
 } from "react-native-heroicons/solid";
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import ScheduleCard from "../components/ScheduleCard";
 import { auth, db } from "../firebase";
 import { signOut } from "firebase/auth";
@@ -40,6 +41,7 @@ import AnnouncementCard from "../components/AnnouncementCard";
 
 function HomeScreen() {
   const navigation = useNavigation();
+  const isFocused = useIsFocused();
   const [user, setUser] = useState("");
   const [tasmikSessions, setTasmikSessions] = useState([]);
   const [announcements, setAnnouncements] = useState([]);
@@ -101,6 +103,13 @@ function HomeScreen() {
     }
   }, [user]);
 
+  useEffect(() => {
+    if (isFocused) {
+      getTasmikSessions();
+      getAnnouncements();
+    }
+  }, [isFocused]);
+
   const logOut = () => {
     signOut(auth)
       .then(() => {
@@ -137,7 +146,7 @@ function HomeScreen() {
   if (initializing)
     return (
       <View className="items-center justify-center w-screen h-screen bg-white">
-        <Image source={require("../assets/load.gif")} />
+        <ActivityIndicator size="large" color="826aed" />
       </View>
     );
 
@@ -245,6 +254,32 @@ function HomeScreen() {
                 Attendance
               </Text>
             </TouchableOpacity>
+            {user.type == "student" ? (
+              <TouchableOpacity
+                className="h-24 w-28 items-center justify-center rounded-2xl mx-1"
+                onPress={() => navigation.navigate("ApplyLeave")}
+              >
+                <View className="rounded-full bg-[#ffffff] p-3 shadow-sm shadow-black/10">
+                  <InboxStackIcon size={45} color="#588157" />
+                </View>
+                <Text className="text-[#212529] font-semibold text-base">
+                  Apply Leave
+                </Text>
+              </TouchableOpacity>
+            ) : null}
+            {user.type == "lecturer" ? (
+              <TouchableOpacity
+                className="h-24 w-28 items-center justify-center rounded-2xl mx-1"
+                onPress={() => navigation.navigate("LeaveApplication")}
+              >
+                <View className="rounded-full bg-[#ffffff] p-3 shadow-sm shadow-black/10">
+                  <InboxStackIcon size={45} color="#588157" />
+                </View>
+                <Text className="text-[#212529] font-semibold text-base">
+                  Apply Leave
+                </Text>
+              </TouchableOpacity>
+            ) : null}
             <TouchableOpacity
               className="h-24 w-28 items-center justify-center rounded-2xl mx-1"
               onPress={() => navigation.navigate("Announcement")}
@@ -265,17 +300,6 @@ function HomeScreen() {
               </View>
               <Text className="text-[#212529] font-semibold text-base">
                 Report
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              className="h-24 w-28 items-center justify-center rounded-2xl mx-1"
-              onPress={() => navigation.navigate("ApplyLeave")}
-            >
-              <View className="rounded-full bg-[#ffffff] p-3 shadow-sm shadow-black/10">
-                <InboxStackIcon size={45} color="#588157" />
-              </View>
-              <Text className="text-[#212529] font-semibold text-base">
-                Apply Leave
               </Text>
             </TouchableOpacity>
           </ScrollView>

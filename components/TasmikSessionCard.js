@@ -39,7 +39,7 @@ const TasmikSessionCard = ({
         <View>
           <Text className="text-[#212529] font-bold text-lg">{title}</Text>
           <Text className="text-[#6c757d] font-semibold text-base">
-            Date: {date}
+            Date: {date} at {time}
           </Text>
         </View>
         <AdjustmentsHorizontalIcon size={25} color="#826aed" />

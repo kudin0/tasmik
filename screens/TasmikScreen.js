@@ -4,7 +4,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ScrollView,
-  Image,
+  ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -16,7 +16,6 @@ import {
   CalendarIcon,
   HomeIcon,
   UserCircleIcon,
-  UserIcon,
 } from "react-native-heroicons/outline";
 import TasmikSessionCard from "../components/TasmikSessionCard";
 import {
@@ -92,7 +91,7 @@ const TasmikScreen = () => {
   if (initializing)
     return (
       <View className="items-center justify-center w-screen h-screen bg-white">
-        <Image source={require("../assets/load.gif")} />
+        <ActivityIndicator size="large" color="826aed" />
       </View>
     );
 
@@ -181,6 +180,7 @@ const TasmikScreen = () => {
         {tasmikSessions.map((tasmik) => (
           <TasmikSessionCard
             key={tasmik.id}
+            id={tasmik.id}
             title={tasmik.title}
             date={tasmik.date}
             time={tasmik.time}

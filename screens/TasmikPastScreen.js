@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
+  ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -91,7 +92,7 @@ const TasmikPastScreen = () => {
   if (initializing)
     return (
       <View className="items-center justify-center w-screen h-screen bg-white">
-        <Image source={require("../assets/load.gif")} />
+        <ActivityIndicator size="large" color="826aed" />
       </View>
     );
 

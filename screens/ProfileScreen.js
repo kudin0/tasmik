@@ -5,6 +5,7 @@ import {
   Image,
   SafeAreaView,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -42,7 +43,7 @@ const ProfileScreen = () => {
   if (initializing)
     return (
       <View className="items-center justify-center w-screen h-screen bg-white">
-        <Image source={require("../assets/load.gif")} />
+        <ActivityIndicator size="large" color="826aed" />
       </View>
     );
 

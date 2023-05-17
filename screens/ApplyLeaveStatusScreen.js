@@ -7,6 +7,7 @@ import {
   TextInput,
   Alert,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -27,7 +28,7 @@ import LeaveStatusCard from "../components/LeaveStatusCard";
 const ApplyLeaveStatusScreen = () => {
   const navigation = useNavigation();
   const [user, setUser] = useState("");
-  const [leaveApplications, setLeaveApplications] = useState("");
+  const [leaveApplications, setLeaveApplications] = useState([]);
   const [initializing, setInitializing] = useState(true);
   const [refreshKey, setRefreshKey] = useState(0);
 
@@ -74,7 +75,7 @@ const ApplyLeaveStatusScreen = () => {
   if (initializing)
     return (
       <View className="items-center justify-center w-screen h-screen bg-white">
-        <Image source={require("../assets/load.gif")} />
+        <ActivityIndicator size="large" color="826aed" />
       </View>
     );
 
@@ -123,6 +124,9 @@ const ApplyLeaveStatusScreen = () => {
             <LeaveStatusCard
               key={leaveApplication.id}
               id={leaveApplication.id}
+              type={"student"}
+              name={leaveApplication.name}
+              matric={leaveApplication.matric}
               session={leaveApplication.session}
               reason={leaveApplication.reason}
               details={leaveApplication.details}
