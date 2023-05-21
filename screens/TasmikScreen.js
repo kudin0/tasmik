@@ -186,6 +186,7 @@ const TasmikScreen = () => {
             time={tasmik.time}
             place={tasmik.place}
             details={tasmik.details}
+            classroom={user.classroom}
           />
         ))}
       </ScrollView>

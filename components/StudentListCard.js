@@ -2,13 +2,32 @@ import { View, Text, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 
-const StudentsListCard = ({ id, name, matric, session }) => {
+const StudentsListCard = ({
+  studentId,
+  name,
+  matric,
+  classroom,
+  sessionId,
+  sessionTitle,
+  date,
+}) => {
   const navigation = useNavigation();
   const [user, setUser] = useState("");
   const [initializing, setInitializing] = useState(true);
 
   return (
-    <TouchableOpacity className="relative mt-2 flex-row" onPress={() => {}}>
+    <TouchableOpacity
+      className="relative mt-2 flex-row"
+      onPress={() => {
+        navigation.navigate("TasmikGrading", {
+          classroom,
+          sessionId,
+          sessionTitle,
+          date,
+          studentId,
+        });
+      }}
+    >
       <View className="bg-[#ffffff] justify-between items-center rounded-lg w-full flex-row p-4 border shadow shadow-black/10">
         <View>
           <Text className="text-[#212529] font-bold text-lg">{name}</Text>

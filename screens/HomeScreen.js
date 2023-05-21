@@ -158,10 +158,16 @@ function HomeScreen() {
       {/* Header */}
       <View className="flex pt-7 pb-5 px-5 bg-[#826aed]">
         <View className="flex-row">
-          <Text className="text-4xl font-extrabold text-[#FBFAFF] pr-1">
-            myTasmik
-          </Text>
-          <BookOpenIcon size={32} color="#ffffff" />
+          <View className="flex-row items-center">
+            <Text className="text-4xl font-extrabold text-[#FBFAFF] pr-2">
+              myTasmik
+            </Text>
+            <Image
+              source={require("../assets/whale3.png")}
+              className="w-14 h-12"
+            />
+          </View>
+
           <TouchableOpacity className="ml-auto" onPress={alertLogOut}>
             <ArrowLeftOnRectangleIcon size={32} color="#ffffff" />
           </TouchableOpacity>
@@ -237,7 +243,6 @@ function HomeScreen() {
         <View className="">
           <ScrollView
             contentContainerStyle={{
-              paddingHorizontal: 15,
               paddingTop: 10,
             }}
             horizontal

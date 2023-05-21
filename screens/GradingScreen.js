@@ -77,9 +77,12 @@ import {
             {students.map((student) => (
               <StudentsListCard
                 key={student.id}
-                id={student.id}
+                studentId={student.id}
                 name={student.name}
                 matric={student.matric}
+                sessionId={id}
+                date={date}
+                sessionTitle={title}
               />
             ))}
           </ScrollView>

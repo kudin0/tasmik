@@ -25,7 +25,7 @@ const TasmikDetailScreen = () => {
   const navigation = useNavigation();
 
   const {
-    params: { id, title, date, time, place, details, attendance },
+    params: { id, title, date, time, place, details, classroom },
   } = useRoute();
 
   const [user, setUser] = useState("");
@@ -80,7 +80,8 @@ const TasmikDetailScreen = () => {
               id={student.id}
               name={student.name}
               matric={student.matric}
-              session={id}
+              sessionTitle={title}
+              sessionId={id}
             />
           ))}
         </ScrollView>

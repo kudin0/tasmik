@@ -61,12 +61,14 @@ const LogInScreen = () => {
         </View>
 
         <View className="bg-[#F1F5F8] h-full">
-          <View className="items-center pb-3 my-4 space-x-2 pt-12">
-            <Image
-              source={require("../assets/logo.png")}
-              className="w-24 h-24 pt-[50px]"
-            />
-            <Text className="font-extrabold text-5xl text-[#212529] py-5">
+          <View className="items-center mb-3 mt-12">
+            <View className="rounded-full bg-[#826aed] p-4">
+              <Image
+                source={require("../assets/whale2.png")}
+                className="w-28 h-28"
+              />
+            </View>
+            <Text className="font-extrabold text-5xl text-[#826aed] py-5">
               myTasmik
             </Text>
           </View>
@@ -77,7 +79,7 @@ const LogInScreen = () => {
             <TextInput
               className="mb-5 pl-2 h-12 bg-white rounded-lg text-lg text-[#212529] shadow-sm"
               placeholder="Email"
-              placeholderTextColor="#6c757d"
+              placeholderTextColor="#adb5bd"
               onChangeText={(email) => setEmail(email)}
               autoCapitalize="none"
               value={email}
@@ -91,7 +93,7 @@ const LogInScreen = () => {
               className="mb-5 pl-2 h-12 bg-white rounded-lg text-lg text-[#212529] shadow-sm"
               maxLength={20}
               placeholder="Password"
-              placeholderTextColor="#6c757d"
+              placeholderTextColor="#adb5bd"
               secureTextEntry={true}
               onChangeText={(password) => setPassword(password)}
               value={password}

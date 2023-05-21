@@ -74,8 +74,6 @@ const LeaveApplicationScreen = () => {
 
   useEffect(() => {
     if (user) {
-      getClassroomInfo();
-      getTasmikSessions();
       getLeaveAppplication();
     }
   }, [user]);

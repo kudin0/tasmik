@@ -19,6 +19,7 @@ import ApplyLeaveScreen from "./screens/ApplyLeaveScreen";
 import ApplyLeaveStatusScreen from "./screens/ApplyLeaveStatusScreen";
 import ApplyLeaveDetailsScreen from "./screens/ApplyLeaveDetailsScreen";
 import LeaveApplicationScreen from "./screens/LeaveApplicationScreen";
+import TasmikGradingScreen from "./screens/TasmikGradingScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -92,7 +93,12 @@ function App() {
       <Stack.Screen
         name="TasmikDetail"
         component={TasmikDetailScreen}
-        options={{ headerShown: false, headerShown: false }}
+        options={{ headerShown: false, animation: "none" }}
+      />
+      <Stack.Screen
+        name="TasmikGrading"
+        component={TasmikGradingScreen}
+        options={{ headerShown: false, animation: "none" }}
       />
       <Stack.Screen
         name="Report"

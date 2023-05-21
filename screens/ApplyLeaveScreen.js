@@ -208,8 +208,7 @@ const ApplyLeaveScreen = () => {
             <TextInput
               className="mb-3 pl-2 h-12 bg-white rounded-lg text-lg text-[#212529] shadow-sm"
               placeholder="Reason for leave"
-              placeholderTextColor="#6c757d"
-              autoCapitalize="none"
+              placeholderTextColor="#adb5bd"
               clearButtonMode="always"
               onChangeText={(leaveReason) => setLeaveReason(leaveReason)}
               value={leaveReason}
@@ -220,8 +219,7 @@ const ApplyLeaveScreen = () => {
             <TextInput
               className="mb-3 pl-2 h-12 bg-white rounded-lg text-lg text-[#212529] shadow-sm"
               placeholder="Further details"
-              placeholderTextColor="#6c757d"
-              autoCapitalize="none"
+              placeholderTextColor="#adb5bd"
               clearButtonMode="always"
               onChangeText={(leaveDetails) => setLeaveDetails(leaveDetails)}
               value={leaveDetails}
