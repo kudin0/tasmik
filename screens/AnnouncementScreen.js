@@ -4,23 +4,38 @@ import {
   ScrollView,
   SafeAreaView,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import AnnouncementCard from "../components/AnnouncementCard";
-import { ArrowLeftIcon } from "react-native-heroicons/solid";
-import { useNavigation } from "@react-navigation/native";
+import {
+  ArrowLeftIcon,
+  PencilIcon,
+  PlusIcon,
+} from "react-native-heroicons/solid";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import SafeViewAndroid from "../components/SafeViewAndroid";
 import {
   CalendarDaysIcon,
   HomeIcon,
   UserCircleIcon,
 } from "react-native-heroicons/outline";
-import { collection, getDocs, orderBy, query } from "firebase/firestore";
-import { db } from "../firebase";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  orderBy,
+  query,
+} from "firebase/firestore";
+import { auth, db } from "../firebase";
 
 const AnnouncementScreen = () => {
   const navigation = useNavigation();
+  const isFocused = useIsFocused();
   const [announcements, setAnnouncements] = useState([]);
+  const [user, setUser] = useState("");
+  const [initializing, setInitializing] = useState(true);
 
   const getAnnouncements = async () => {
     try {
@@ -31,14 +46,41 @@ const AnnouncementScreen = () => {
         id: doc.id,
       }));
       setAnnouncements(filteredData);
+      if (initializing) {
+        setInitializing(false);
+      }
     } catch (error) {
       console.log(error);
     }
   };
 
+  const getUser = async () => {
+    getDoc(doc(db, "users", auth.currentUser.uid)).then((snapshot) => {
+      if (snapshot.exists) {
+        setUser(snapshot.data());
+      } else {
+        console.log("User does not exists");
+      }
+    });
+  };
+
   useEffect(() => {
     getAnnouncements();
+    getUser();
   }, []);
+
+  useEffect(() => {
+    if (isFocused) {
+      getAnnouncements();
+    }
+  }, [isFocused]);
+
+  if (initializing)
+    return (
+      <View className="items-center justify-center w-screen h-screen bg-white">
+        <ActivityIndicator size="large" color="826aed" />
+      </View>
+    );
 
   return (
     <SafeAreaView
@@ -53,12 +95,11 @@ const AnnouncementScreen = () => {
         >
           <ArrowLeftIcon size={20} color="#ffffff" />
         </TouchableOpacity>
-        <Text className="text-xl text-[#ffffff] font-extrabold">Bulletin</Text>
+        <Text className="text-xl text-[#ffffff] font-extrabold">Announcement</Text>
       </View>
 
       <View className="bg-[#F1F5F8] h-full">
         <ScrollView
-          className="h-full"
           contentContainerStyle={{
             paddingBottom: 100,
           }}
@@ -75,6 +116,19 @@ const AnnouncementScreen = () => {
           ))}
         </ScrollView>
       </View>
+
+      {/* lecturer add announcement */}
+      {user.type == "lecturer" ? (
+        <TouchableOpacity
+          className="bg-white py-5 px-3 rounded-2xl shadow shadow-black/10 items-center justify-center absolute bottom-28 right-4"
+          onPress={() => navigation.navigate("AnnounceWrite")}
+        >
+          <PlusIcon size={30} color="#826aed" />
+          <Text className="tracking-tighter leading-tight text-center text-[#212529]">
+            Announcement
+          </Text>
+        </TouchableOpacity>
+      ) : null}
 
       {/* Bottom Navigation */}
       <View className="absolute inset-x-0 bottom-0 h-[90px] pb-3 bg-white shadow shadow-black/10">

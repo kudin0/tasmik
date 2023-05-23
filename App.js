@@ -20,6 +20,7 @@ import ApplyLeaveStatusScreen from "./screens/ApplyLeaveStatusScreen";
 import ApplyLeaveDetailsScreen from "./screens/ApplyLeaveDetailsScreen";
 import LeaveApplicationScreen from "./screens/LeaveApplicationScreen";
 import TasmikGradingScreen from "./screens/TasmikGradingScreen";
+import AnnounceWriteScreen from "./screens/AnnounceWriteScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -73,6 +74,11 @@ function App() {
       <Stack.Screen
         name="Announcement"
         component={AnnouncementScreen}
+        options={{ headerShown: false, animation: "none" }}
+      />
+      <Stack.Screen
+        name="AnnounceWrite"
+        component={AnnounceWriteScreen}
         options={{ headerShown: false, animation: "none" }}
       />
       <Stack.Screen

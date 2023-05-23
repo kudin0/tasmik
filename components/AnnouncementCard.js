@@ -15,7 +15,7 @@ const AnnouncementCard = ({
 
   return (
     <TouchableOpacity
-      className="relative bg-white"
+      className="relative"
       onPress={() => {
         navigation.navigate("AnnounceDetail", {
           id,

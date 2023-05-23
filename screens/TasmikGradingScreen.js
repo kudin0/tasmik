@@ -147,7 +147,7 @@ const TasmikGradingScreen = () => {
                 multiline
                 textAlignVertical="top"
                 numberOfLines={3}
-                className="mb-3 pl-2 h-24 bg-white rounded-xl text-lg text-[#212529] shadow-sm"
+                className="mb-3 pl-2 h-24 bg-white rounded-lg text-lg text-[#212529] shadow-sm"
                 onChangeText={(comment) => setComment1(comment)}
                 value={comment1}
                 placeholder="Comment for Aspect #1"
@@ -181,7 +181,7 @@ const TasmikGradingScreen = () => {
                 multiline
                 textAlignVertical="top"
                 numberOfLines={3}
-                className="mb-3 pl-2 h-24 bg-white rounded-xl text-lg text-[#212529] shadow-sm"
+                className="mb-3 pl-2 h-24 bg-white rounded-lg text-lg text-[#212529] shadow-sm"
                 onChangeText={(comment) => setComment2(comment)}
                 value={comment2}
                 placeholder="Comment for Aspect #2"
