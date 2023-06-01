@@ -75,6 +75,16 @@ const AnnouncementScreen = () => {
     }
   }, [isFocused]);
 
+  const handleTasmikButton = () => {
+    if (user.type === "lecturer") {
+      navigation.navigate("TasmikLecturer");
+    }
+
+    if (user.type === "student") {
+      navigation.navigate("Tasmik");
+    }
+  };
+
   if (initializing)
     return (
       <View className="items-center justify-center w-screen h-screen bg-white">
@@ -95,7 +105,9 @@ const AnnouncementScreen = () => {
         >
           <ArrowLeftIcon size={20} color="#ffffff" />
         </TouchableOpacity>
-        <Text className="text-xl text-[#ffffff] font-extrabold">Announcement</Text>
+        <Text className="text-xl text-[#ffffff] font-extrabold">
+          Announcement
+        </Text>
       </View>
 
       <View className="bg-[#F1F5F8] h-full">
@@ -108,6 +120,7 @@ const AnnouncementScreen = () => {
             <AnnouncementCard
               key={announcement.id}
               id={announcement.id}
+              userType={user.type}
               title={announcement.title}
               byName={announcement.by}
               date={announcement.date}
@@ -151,10 +164,7 @@ const AnnouncementScreen = () => {
               <Text className="text-xs text-[#6c757d]">Home</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity
-            className=""
-            onPress={() => navigation.navigate("Tasmik")}
-          >
+          <TouchableOpacity className="" onPress={handleTasmikButton}>
             <View className="h-full items-center space-y-1">
               <CalendarDaysIcon size={30} color="#6c757d" />
               <Text className="text-xs text-[#6c757d]">Attendance</Text>

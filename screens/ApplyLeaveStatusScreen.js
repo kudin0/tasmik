@@ -19,6 +19,7 @@ import {
   doc,
   getDoc,
   getDocs,
+  orderBy,
   query,
   where,
 } from "firebase/firestore";
@@ -46,7 +47,8 @@ const ApplyLeaveStatusScreen = () => {
     try {
       const q = query(
         collection(db, "leave_application"),
-        where("uid", "==", user.uid)
+        where("uid", "==", user.uid),
+        orderBy("timestamp", "asc")
       );
       const data = await getDocs(q);
       const filteredData = data.docs.map((doc) => ({

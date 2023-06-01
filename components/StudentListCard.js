@@ -1,6 +1,10 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
+import {
+  ClipboardDocumentCheckIcon,
+  PencilSquareIcon,
+} from "react-native-heroicons/solid";
 
 const StudentsListCard = ({
   studentId,
@@ -16,31 +20,32 @@ const StudentsListCard = ({
   const [initializing, setInitializing] = useState(true);
 
   return (
-    <TouchableOpacity
-      className="relative mt-2 flex-row"
-      onPress={() => {
-        navigation.navigate("TasmikGrading", {
-          classroom,
-          sessionId,
-          sessionTitle,
-          date,
-          studentId,
-        });
-      }}
-    >
+    <View className="relative mt-2 flex-row">
       <View className="bg-[#ffffff] justify-between items-center rounded-lg w-full flex-row p-4 border shadow shadow-black/10">
         <View>
           <Text className="text-[#212529] font-bold text-lg">{name}</Text>
           <Text className="text-[#6c757d] font-semibold text-base">
             {matric}
           </Text>
+          <View className="flex-row items-center">
+            <Text className="text-[#212529] font-bold text-lg pr-2">
+              Status:
+            </Text>
+            <Text className="text-[#6c757d] font-semibold text-base">none</Text>
+          </View>
         </View>
-        <View className="items-center">
-          <Text className="text-[#212529] font-bold text-lg">Status</Text>
-          <Text className="text-[#6c757d] font-semibold text-base">none</Text>
+        <View className="flex-row space-x-3">
+          <TouchableOpacity className="items-center">
+            <ClipboardDocumentCheckIcon size={25} color="#826aed" />
+            <Text className="text-center text-[#6c757d] text-base">{`Mark \nAttendance`}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity className="items-center">
+            <PencilSquareIcon size={25} color="#826aed" />
+            <Text className="text-[#6c757d] text-base">Add Report</Text>
+          </TouchableOpacity>
         </View>
       </View>
-    </TouchableOpacity>
+    </View>
   );
 };
 

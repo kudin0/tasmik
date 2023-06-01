@@ -4,42 +4,79 @@ import {
   ScrollView,
   SafeAreaView,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import React, { useEffect } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { ArrowLeftIcon } from "react-native-heroicons/solid";
 import SafeViewAndroid from "../components/SafeViewAndroid";
 import { db } from "../firebase";
-import { doc, updateDoc } from "firebase/firestore";
+import { addDoc, collection, doc, setDoc, updateDoc } from "firebase/firestore";
+import { useState } from "react";
 
 const ApplyLeaveDetailsScreen = () => {
   const navigation = useNavigation();
+  const [loading, setLoading] = useState(false);
 
   const {
     params: {
       id,
       type,
+      uid,
       name,
       matric,
       session,
+      sessionId,
       reason,
       details,
       status,
       timestamp,
+      classroom,
     },
   } = useRoute();
 
-  const approveApplication = async () => {
+  const updateLeaveApplication = async () => {
     const leaveApplication = doc(db, "leave_application", id);
     await updateDoc(leaveApplication, { status: "Approved" });
-    navigation.navigate("ApplyLeave");
+  };
+
+  const updateAttendance = async () => {
+    try {
+      const classroomRef = doc(db, "classroom", classroom);
+      const sessionRef = doc(classroomRef, "session", sessionId);
+      const attendanceCollectionRef = collection(sessionRef, "attendance");
+      const documentRef = doc(attendanceCollectionRef, uid);
+
+      await setDoc(documentRef, {
+        status: "Applied Leave",
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const approveApplication = async () => {
+    try {
+      setLoading(true);
+      await Promise.all([updateLeaveApplication(), updateAttendance()]);
+      navigation.navigate("LeaveApplication");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const rejectApplication = async () => {
     const leaveApplication = doc(db, "leave_application", id);
     await updateDoc(leaveApplication, { status: "Rejected" });
-    navigation.navigate("ApplyLeave");
+    navigation.navigate("LeaveApplication");
   };
+
+  if (loading)
+    return (
+      <View className="items-center justify-center w-screen h-screen bg-white">
+        <ActivityIndicator size="large" color="826aed" />
+      </View>
+    );
 
   return (
     <>

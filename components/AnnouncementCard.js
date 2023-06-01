@@ -10,6 +10,7 @@ const AnnouncementCard = ({
   date,
   details,
   screen,
+  userType,
 }) => {
   const navigation = useNavigation();
 
@@ -24,14 +25,13 @@ const AnnouncementCard = ({
           byName,
           date,
           details,
+          userType,
         });
       }}
     >
       {screen == "home" ? (
         <View className="h-28 w-screen bg-white justify-center items-center">
-          <Text className="text-[#212529] text-lg font-semibold">
-            {title}
-          </Text>
+          <Text className="text-[#212529] text-lg font-semibold">{title}</Text>
         </View>
       ) : (
         <View className="my-2">

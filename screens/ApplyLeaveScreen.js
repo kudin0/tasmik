@@ -65,7 +65,7 @@ const ApplyLeaveScreen = () => {
       );
       const data = await getDocs(q);
       const filteredData = data.docs.map((doc) => ({
-        value: doc.data().title,
+        value: doc.data(),
         label: doc.data().title,
       }));
       setTasmikSessions(filteredData);
@@ -112,7 +112,8 @@ const ApplyLeaveScreen = () => {
         matric: user.matric,
         timestamp: moment().utcOffset("+8:00").format("DD-MM-YYYY hh:mm A"),
         reason: leaveReason,
-        session: selectedSession,
+        sessionId: selectedSession.id,
+        session: selectedSession.title,
         details: leaveDetails,
         status: "Applied",
         classroom: classroom.id,

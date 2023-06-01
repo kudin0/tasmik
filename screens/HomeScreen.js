@@ -143,6 +143,26 @@ function HomeScreen() {
     }
   };
 
+  const handleApplyLeaveButton = () => {
+    if (user.type === "lecturer") {
+      navigation.navigate("LeaveApplication");
+    }
+
+    if (user.type === "student") {
+      navigation.navigate("ApplyLeave");
+    }
+  };
+
+  const handleTasmikButton = () => {
+    if (user.type === "lecturer") {
+      navigation.navigate("TasmikLecturer");
+    }
+
+    if (user.type === "student") {
+      navigation.navigate("Tasmik");
+    }
+  };
+
   if (initializing)
     return (
       <View className="items-center justify-center w-screen h-screen bg-white">
@@ -197,6 +217,7 @@ function HomeScreen() {
               key={announcement.id}
               screen={"home"}
               title={announcement.title}
+              userType={user.type}
               byName={announcement.by}
               date={announcement.date}
               details={announcement.details}
@@ -250,7 +271,7 @@ function HomeScreen() {
           >
             <TouchableOpacity
               className="h-24 w-28 items-center justify-center rounded-2xl mx-1"
-              onPress={() => navigation.navigate("Tasmik")}
+              onPress={handleTasmikButton}
             >
               <View className="rounded-full bg-[#ffffff] p-3 shadow-sm shadow-black/10">
                 <CalendarDaysIcon size={45} color="#d62828" />
@@ -259,32 +280,17 @@ function HomeScreen() {
                 Attendance
               </Text>
             </TouchableOpacity>
-            {user.type == "student" ? (
-              <TouchableOpacity
-                className="h-24 w-28 items-center justify-center rounded-2xl mx-1"
-                onPress={() => navigation.navigate("ApplyLeave")}
-              >
-                <View className="rounded-full bg-[#ffffff] p-3 shadow-sm shadow-black/10">
-                  <InboxStackIcon size={45} color="#588157" />
-                </View>
-                <Text className="text-[#212529] font-semibold text-base">
-                  Apply Leave
-                </Text>
-              </TouchableOpacity>
-            ) : null}
-            {user.type == "lecturer" ? (
-              <TouchableOpacity
-                className="h-24 w-28 items-center justify-center rounded-2xl mx-1"
-                onPress={() => navigation.navigate("LeaveApplication")}
-              >
-                <View className="rounded-full bg-[#ffffff] p-3 shadow-sm shadow-black/10">
-                  <InboxStackIcon size={45} color="#588157" />
-                </View>
-                <Text className="text-[#212529] font-semibold text-base">
-                  Apply Leave
-                </Text>
-              </TouchableOpacity>
-            ) : null}
+            <TouchableOpacity
+              className="h-24 w-28 items-center justify-center rounded-2xl mx-1"
+              onPress={handleApplyLeaveButton}
+            >
+              <View className="rounded-full bg-[#ffffff] p-3 shadow-sm shadow-black/10">
+                <InboxStackIcon size={45} color="#588157" />
+              </View>
+              <Text className="text-[#212529] font-semibold text-base">
+                Apply Leave
+              </Text>
+            </TouchableOpacity>
             <TouchableOpacity
               className="h-24 w-28 items-center justify-center rounded-2xl mx-1"
               onPress={() => navigation.navigate("Announcement")}
@@ -335,10 +341,7 @@ function HomeScreen() {
               <Text className="text-xs text-[#826aed]">Home</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity
-            className=""
-            onPress={() => navigation.navigate("Tasmik")}
-          >
+          <TouchableOpacity className="" onPress={handleTasmikButton}>
             <View className="h-full items-center space-y-1">
               <CalendarDaysIcon size={30} color="#6c757d" />
               <Text className="text-xs text-[#6c757d]">Attendance</Text>

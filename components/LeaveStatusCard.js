@@ -9,13 +9,16 @@ import { ActivityIndicator } from "react-native";
 const LeaveStatusCard = ({
   id,
   type,
+  uid,
   name,
   matric,
   session,
-  timestamp,
+  sessionId,
   reason,
   details,
   status,
+  timestamp,
+  classroom,
 }) => {
   const navigation = useNavigation();
   const [initializing, setInitializing] = useState(false);
@@ -67,13 +70,16 @@ const LeaveStatusCard = ({
           navigation.navigate("ApplyLeaveDetails", {
             id,
             type,
+            uid,
             name,
             matric,
             session,
-            timestamp,
+            sessionId,
             reason,
             details,
             status,
+            timestamp,
+            classroom,
           })
         }
       >
@@ -86,9 +92,15 @@ const LeaveStatusCard = ({
           <Text className="text-[#6c757d] font-semibold text-sm">
             {timestamp}
           </Text>
-          <Text className="text-[#826aed] font-semibold text-sm text-right">
-            {status}
-          </Text>
+          {status === "Applied" ? (
+            <Text className="text-[#826aed] font-semibold text-sm text-right">
+              {status}
+            </Text>
+          ) : (
+            <Text className="text-[#6c757d] font-semibold text-sm text-right">
+              {status}
+            </Text>
+          )}
         </View>
       </TouchableOpacity>
     );

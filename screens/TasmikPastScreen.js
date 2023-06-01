@@ -89,6 +89,16 @@ const TasmikPastScreen = () => {
     setRefreshKey((prevKey) => prevKey + 1);
   }
 
+  const handleTasmikButton = () => {
+    if (user.type === "lecturer") {
+      navigation.navigate("TasmikLecturer");
+    }
+
+    if (user.type === "student") {
+      navigation.navigate("Tasmik");
+    }
+  };
+
   if (initializing)
     return (
       <View className="items-center justify-center w-screen h-screen bg-white">
@@ -211,10 +221,7 @@ const TasmikPastScreen = () => {
               <Text className="text-xs text-[#6c757d]">Home</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity
-            className=""
-            onPress={() => navigation.navigate("Tasmik")}
-          >
+          <TouchableOpacity className="" onPress={handleTasmikButton}>
             <View className="h-full items-center space-y-1">
               <CalendarDaysIcon size={30} color="#826aed" />
               <Text className="text-xs text-[#826aed]">Attendance</Text>

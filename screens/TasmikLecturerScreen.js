@@ -27,7 +27,7 @@ import {
 } from "firebase/firestore";
 import { auth, db } from "../firebase";
 
-const TasmikScreen = () => {
+const TasmikLecturerScreen = () => {
   const navigation = useNavigation();
 
   const [user, setUser] = useState("");
@@ -140,48 +140,6 @@ const TasmikScreen = () => {
             <Text className="text-[#6c757d] font-semibold text-base">Term</Text>
           </View>
         </View>
-
-        {/* Top */}
-        <View className="py-3 space-y-3">
-          <View className="flex-row items-center justify-evenly">
-            <TouchableOpacity className="pb-2 border-b-2 border-[#826aed]">
-              <Text
-                className="text-base text-[#826aed] font-bold"
-                onPress={() => navigation.navigate("Tasmik")}
-              >
-                Next Tasmik
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity className="pb-2">
-              <Text
-                className="text-base text-[#6c757d] font-bold"
-                onPress={() => navigation.navigate("TasmikPast")}
-              >
-                Past Tasmik
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <View className="flex-row mx-6 items-center justify-between space-x-3">
-            <Text className="text-base text-[#6c757d] font-semibold">
-              Timeline
-            </Text>
-            <TouchableOpacity className="border border-[#826aed] px-2 py-1 rounded-full flex-row items-center space-x-1">
-              <CalendarIcon size={20} color="#826aed" />
-              <Text className="text-base text-[#826aed] font-semibold">
-                Tasmik Balance
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              className="border border-[#826aed] px-2 py-1 rounded-full flex-row items-center space-x-1"
-              onPress={handleRefresh}
-            >
-              <ArrowPathIcon size={20} color="#826aed" />
-              <Text className="text-base text-[#826aed] font-semibold">
-                Refresh
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
       </View>
 
       {/* content */}
@@ -221,10 +179,7 @@ const TasmikScreen = () => {
               <Text className="text-xs text-[#6c757d]">Home</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity
-            className=""
-            onPress={handleTasmikButton}
-          >
+          <TouchableOpacity className="" onPress={handleTasmikButton}>
             <View className="h-full items-center space-y-1">
               <CalendarDaysIcon size={30} color="#826aed" />
               <Text className="text-xs text-[#826aed]">Attendance</Text>
@@ -236,4 +191,4 @@ const TasmikScreen = () => {
   );
 };
 
-export default TasmikScreen;
+export default TasmikLecturerScreen;
