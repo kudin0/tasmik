@@ -7,7 +7,11 @@ import {
   ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import {
+  useIsFocused,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
 import { ArrowLeftIcon } from "react-native-heroicons/solid";
 import SafeViewAndroid from "../components/SafeViewAndroid";
 import {
@@ -16,6 +20,7 @@ import {
   getDoc,
   getDocs,
   query,
+  setDoc,
   where,
 } from "firebase/firestore";
 import { auth, db } from "../firebase";
@@ -23,7 +28,6 @@ import StudentsListCard from "../components/StudentListCard";
 
 const TasmikDetailScreen = () => {
   const navigation = useNavigation();
-
   const {
     params: { id, title, date, time, place, details, classroom },
   } = useRoute();
@@ -32,42 +36,67 @@ const TasmikDetailScreen = () => {
   const [initializing, setInitializing] = useState(true);
   const [students, setStudents] = useState([]);
 
-  useEffect(() => {
-    getDoc(doc(db, "users", auth.currentUser.uid)).then((snapshot) => {
-      if (snapshot.exists) {
-        setUser(snapshot.data());
-      } else {
-        console.log("User does not exists");
-      }
-    });
-  }, []);
-
-  const getStudents = async () => {
-    const q = query(
-      collection(db, "users"),
-      where("type", "==", "student"),
-      where("classroom", "==", user.classroom)
-    );
+  const fetchData = async () => {
     try {
+      // Fetch the user data
+      const userSnapshot = await getDoc(doc(db, "users", auth.currentUser.uid));
+      if (userSnapshot.exists) {
+        setUser(userSnapshot.data());
+      } else {
+        console.log("User does not exist");
+      }
+
+      // Fetch the student data
+      const q = query(
+        collection(db, "users"),
+        where("type", "==", "student"),
+        where("classroom", "==", classroom)
+      );
       const data = await getDocs(q);
       const filteredData = data.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
       }));
-      setStudents(filteredData);
-      if (initializing) {
-        setInitializing(false);
-      }
+
+      const studentStatus = await Promise.all(
+        filteredData.map(async (student) => {
+          const attendanceDocRef = doc(
+            db,
+            "classroom",
+            classroom,
+            "session",
+            id,
+            "attendance",
+            student.id
+          );
+          const attendanceDocSnap = await getDoc(attendanceDocRef);
+          const status = attendanceDocSnap.exists()
+            ? attendanceDocSnap.data().status
+            : "none";
+          return {
+            ...student,
+            status: status,
+          };
+        })
+      );
+
+      setStudents(studentStatus);
     } catch (error) {
       console.log(error);
+    } finally {
+      setInitializing(false);
     }
   };
 
   useEffect(() => {
-    if (user) {
-      getStudents();
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (initializing) {
+      fetchData();
     }
-  }, [user]);
+  }, [initializing]);
 
   const StudentsList = () => {
     return (
@@ -79,14 +108,37 @@ const TasmikDetailScreen = () => {
               key={student.id}
               id={student.id}
               name={student.name}
+              status={student.status}
               matric={student.matric}
               sessionTitle={title}
               sessionId={id}
+              onPressAttendance={() =>
+                handleAttendanceButton(student.id, classroom, id)
+              }
             />
           ))}
         </ScrollView>
       </View>
     );
+  };
+
+  const handleAttendanceButton = async (studentId, classroom, session) => {
+    try {
+      const attendanceDocRef = doc(
+        db,
+        "classroom",
+        classroom,
+        "session",
+        session,
+        "attendance",
+        studentId
+      );
+      await setDoc(attendanceDocRef, { status: "attended" });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setInitializing(true);
+    }
   };
 
   if (initializing)

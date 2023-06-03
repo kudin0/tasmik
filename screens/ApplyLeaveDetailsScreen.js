@@ -135,7 +135,7 @@ const ApplyLeaveDetailsScreen = () => {
               {details}
             </Text>
           </View>
-          {status == "Applied" ? (
+          {status == "Pending" ? (
             <View className="pt-[100px] space-y-2">
               <TouchableOpacity
                 onPress={approveApplication}

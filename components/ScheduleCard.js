@@ -10,10 +10,7 @@ const ScheduleCard = ({
   time,
   place,
   details,
-  attendance,
-  aspect1,
-  aspect2,
-  aspect3,
+  classroom,
 }) => {
   const navigation = useNavigation();
 
@@ -28,10 +25,7 @@ const ScheduleCard = ({
           time,
           place,
           details,
-          attendance,
-          aspect1,
-          aspect2,
-          aspect3,
+          classroom,
         });
       }}
     >

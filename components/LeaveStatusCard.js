@@ -50,7 +50,7 @@ const LeaveStatusCard = ({
           <Text className="text-[#826aed] font-semibold text-sm text-right">
             {status}
           </Text>
-          {status == "Applied" ? (
+          {status == "Pending" ? (
             <TouchableOpacity onPress={cancelApplication}>
               <View className="border rounded-xl p-2 px-6 justify-center self-end">
                 <Text className="text-center">Cancel</Text>
@@ -92,7 +92,7 @@ const LeaveStatusCard = ({
           <Text className="text-[#6c757d] font-semibold text-sm">
             {timestamp}
           </Text>
-          {status === "Applied" ? (
+          {status === "Pending" ? (
             <Text className="text-[#826aed] font-semibold text-sm text-right">
               {status}
             </Text>

@@ -110,11 +110,12 @@ const AnnouncementScreen = () => {
         </Text>
       </View>
 
-      <View className="bg-[#F1F5F8] h-full">
+      <View className="bg-[#F1F5F8]">
         <ScrollView
           contentContainerStyle={{
             paddingBottom: 100,
           }}
+          className="bg-[#F1F5F8] h-full"
         >
           {announcements.map((announcement) => (
             <AnnouncementCard
@@ -127,6 +128,8 @@ const AnnouncementScreen = () => {
               details={announcement.details}
             />
           ))}
+
+          <View className="my-20 py-20"></View>
         </ScrollView>
       </View>
 

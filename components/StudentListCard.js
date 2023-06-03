@@ -10,10 +10,12 @@ const StudentsListCard = ({
   studentId,
   name,
   matric,
+  status,
   classroom,
   sessionId,
   sessionTitle,
   date,
+  onPressAttendance,
 }) => {
   const navigation = useNavigation();
   const [user, setUser] = useState("");
@@ -31,18 +33,27 @@ const StudentsListCard = ({
             <Text className="text-[#212529] font-bold text-lg pr-2">
               Status:
             </Text>
-            <Text className="text-[#6c757d] font-semibold text-base">none</Text>
+            <Text className="text-[#6c757d] font-semibold text-base">
+              {status}
+            </Text>
           </View>
         </View>
         <View className="flex-row space-x-3">
-          <TouchableOpacity className="items-center">
-            <ClipboardDocumentCheckIcon size={25} color="#826aed" />
-            <Text className="text-center text-[#6c757d] text-base">{`Mark \nAttendance`}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity className="items-center">
-            <PencilSquareIcon size={25} color="#826aed" />
-            <Text className="text-[#6c757d] text-base">Add Report</Text>
-          </TouchableOpacity>
+          {status === "none" ? (
+            <TouchableOpacity
+              className="items-center"
+              onPress={onPressAttendance}
+            >
+              <ClipboardDocumentCheckIcon size={25} color="#826aed" />
+              <Text className="text-center text-[#6c757d] text-base">{`Mark \nAttendance`}</Text>
+            </TouchableOpacity>
+          ) : null}
+          {status === "attended" ? (
+            <TouchableOpacity className="items-center">
+              <PencilSquareIcon size={25} color="#826aed" />
+              <Text className="text-[#6c757d] text-base">Add Report</Text>
+            </TouchableOpacity>
+          ) : null}
         </View>
       </View>
     </View>

@@ -51,7 +51,8 @@ const LeaveApplicationScreen = () => {
       const q = query(
         collection(db, "leave_application"),
         where("classroom", "==", user.classroom),
-        orderBy("timestamp", "asc")
+        orderBy("timestamp", "asc"),
+        orderBy("status", "desc")
       );
       const data = await getDocs(q);
       const filteredData = data.docs.map((doc) => ({
@@ -116,8 +117,13 @@ const LeaveApplicationScreen = () => {
         </View>
 
         {/* Content */}
-        <View className="bg-[#F1F5F8] h-full">
-          <ScrollView className="px-5 space-y-2 bg-[#F1F5F8] h-screen">
+        <View className="">
+          <ScrollView
+            contentContainerStyle={{
+              paddingBottom: 100,
+            }}
+            className="px-5 space-y-2 bg-[#F1F5F8] h-full"
+          >
             {leaveApplications.map((leaveApplication) => (
               <LeaveStatusCard
                 key={leaveApplication.id}
@@ -135,6 +141,7 @@ const LeaveApplicationScreen = () => {
                 classroom={leaveApplication.classroom}
               />
             ))}
+            <View className="my-20"></View>
           </ScrollView>
         </View>
 

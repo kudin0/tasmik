@@ -229,7 +229,7 @@ function HomeScreen() {
         <View className="flex pt-4 px-5 shadow shadow-black/20">
           <TouchableOpacity
             className="py-5 w-full bg-[#826aed] rounded-t-2xl"
-            onPress={() => navigation.navigate("Tasmik")}
+            onPress={handleTasmikButton}
           >
             <View className="mx-6 flex-row items-center">
               <CalendarDaysIcon size={24} color="white" />
@@ -248,6 +248,7 @@ function HomeScreen() {
                   time={tasmik.time}
                   place={tasmik.place}
                   details={tasmik.details}
+                  classroom={user.classroom}
                 />
                 {index != tasmikSessions.length - 1 ? (
                   <View className="border-b border-gray-400" />
@@ -315,7 +316,7 @@ function HomeScreen() {
             </TouchableOpacity>
           </ScrollView>
         </View>
-        <View className="my-20 justify-center items-center">
+        <View className="my-20 justify-center items-center pb-20">
           <Text className="text-center text-base font-semibold">{`Made by\nMuhammad Izzudin bin Zamri\nA182956`}</Text>
         </View>
       </ScrollView>

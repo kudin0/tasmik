@@ -115,7 +115,7 @@ const ApplyLeaveScreen = () => {
         sessionId: selectedSession.id,
         session: selectedSession.title,
         details: leaveDetails,
-        status: "Applied",
+        status: "Pending",
         classroom: classroom.id,
       });
       setLeaveReason("");
