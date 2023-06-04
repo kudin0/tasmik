@@ -17,7 +17,7 @@ import SafeViewAndroid from "../components/SafeViewAndroid";
 import ReportCard from "../components/ReportCard";
 import { CalendarDaysIcon } from "react-native-heroicons/solid";
 
-const ReportScreen = () => {
+const ReportLecturerScreen = () => {
   const navigation = useNavigation();
 
   return (
@@ -33,7 +33,7 @@ const ReportScreen = () => {
         >
           <ArrowLeftIcon size={20} color="#ffffff" />
         </TouchableOpacity>
-        <Text className="text-xl text-[#ffffff] font-extrabold">Report</Text>
+        <Text className="text-xl text-[#ffffff] font-extrabold">Report for Lecturer</Text>
       </View>
 
       <View className="bg-[#F1F5F8] h-full">
@@ -91,4 +91,4 @@ const ReportScreen = () => {
   );
 };
 
-export default ReportScreen;
+export default ReportLecturerScreen;

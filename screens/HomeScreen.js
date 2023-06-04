@@ -163,6 +163,16 @@ function HomeScreen() {
     }
   };
 
+  const handleReportButton = () => {
+    if (user.type === "lecturer") {
+      navigation.navigate("ReportLecturer");
+    }
+
+    if (user.type === "student") {
+      navigation.navigate("Report");
+    }
+  };
+
   if (initializing)
     return (
       <View className="items-center justify-center w-screen h-screen bg-white">
@@ -305,7 +315,7 @@ function HomeScreen() {
             </TouchableOpacity>
             <TouchableOpacity
               className="h-24 w-28 items-center justify-center rounded-2xl mx-1"
-              onPress={() => navigation.navigate("Report")}
+              onPress={handleReportButton}
             >
               <View className="rounded-full bg-[#ffffff] p-3 shadow-sm shadow-black/10">
                 <PresentationChartLineIcon size={45} color="#ffbe0b" />
