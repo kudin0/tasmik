@@ -49,17 +49,38 @@ const TasmikPastScreen = () => {
   }, []);
 
   const getTasmikSessions = async () => {
-    const q = query(
-      collection(db, "classroom", user.classroom, "session"),
-      where("past", "==", "yes")
+    const sessionQuery = query(
+      collection(db, "classroom", user.classroom, "session")
     );
+
     try {
-      const data = await getDocs(q);
-      const filteredData = data.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      }));
-      setTasmikSessions(filteredData);
+      const sessionSnapshot = await getDocs(sessionQuery);
+      const sessionData = [];
+
+      for (const docSnap of sessionSnapshot.docs) {
+        const sessionId = docSnap.id;
+        const attendanceDocRef = doc(
+          db,
+          "classroom",
+          user.classroom,
+          "session",
+          sessionId,
+          "attendance",
+          user.uid
+        );
+
+        const attendanceDoc = await getDoc(attendanceDocRef);
+        if (attendanceDoc.exists()) {
+          sessionData.push({
+            id: sessionId,
+            ...docSnap.data(),
+          });
+        }
+      }
+      setTasmikSessions(sessionData);
+      if (initializing) {
+        setInitializing(false);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -69,9 +90,6 @@ const TasmikPastScreen = () => {
     getDoc(doc(db, "classroom", user.classroom)).then((snapshot) => {
       if (snapshot.exists) {
         setClassroom(snapshot.data());
-        if (initializing) {
-          setInitializing(false);
-        }
       } else {
         console.log("User does not exists");
       }

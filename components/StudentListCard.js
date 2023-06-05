@@ -39,7 +39,7 @@ const StudentsListCard = ({
           </View>
         </View>
         <View className="flex-row space-x-3">
-          {status === "none" ? (
+          {status != "attended" ? (
             <TouchableOpacity
               className="items-center"
               onPress={onPressAttendance}

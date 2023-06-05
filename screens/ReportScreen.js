@@ -16,9 +16,51 @@ import {
 import SafeViewAndroid from "../components/SafeViewAndroid";
 import ReportCard from "../components/ReportCard";
 import { CalendarDaysIcon } from "react-native-heroicons/solid";
+import { auth, db } from "../firebase";
+import { collectionGroup, doc, getDoc, getDocs, query, where } from "firebase/firestore";
+import { useState } from "react";
+import { useEffect } from "react";
+import { set } from "firebase/database";
 
 const ReportScreen = () => {
   const navigation = useNavigation();
+  const [user, setUser] = useState("");
+  const [reports, setReports] = useState([]);
+
+  useEffect(() => {
+    getDoc(doc(db, "users", auth.currentUser.uid)).then((snapshot) => {
+      if (snapshot.exists) {
+        setUser(snapshot.data());
+      } else {
+        console.log("User does not exists");
+      }
+    });
+  }, []);
+
+  const getStudentAttendance = async () => {
+    const attedanceQuery = query(
+      collectionGroup(db, "attendance"),
+      where("uid", "==", user.uid)
+    );
+
+    try {
+      const querySnapshot = await getDocs(attedanceQuery);
+      const attendanceDocs = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setReports(attendanceDocs);
+      console.log(attendanceDocs);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (user) {
+      getStudentAttendance();
+    }
+  }, [user]);
 
   return (
     <SafeAreaView

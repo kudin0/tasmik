@@ -133,7 +133,13 @@ const TasmikDetailScreen = () => {
         "attendance",
         studentId
       );
-      await setDoc(attendanceDocRef, { status: "attended" });
+      await setDoc(attendanceDocRef, {
+        status: "attended",
+        uid: studentId,
+        session: session,
+        sessionTitle: title,
+        date: date,
+      });
     } catch (error) {
       console.log(error);
     } finally {

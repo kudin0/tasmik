@@ -9,7 +9,11 @@ import {
   Keyboard,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { useIsFocused, useNavigation } from "@react-navigation/native";
+import {
+  useIsFocused,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
 import { HomeIcon, UserCircleIcon } from "react-native-heroicons/outline";
 import { ArrowLeftIcon, CalendarDaysIcon } from "react-native-heroicons/solid";
 import SafeViewAndroid from "../components/SafeViewAndroid";
@@ -24,15 +28,16 @@ import {
 } from "firebase/firestore";
 import { auth, db } from "../firebase";
 import LeaveStatusCard from "../components/LeaveStatusCard";
-import { set } from "firebase/database";
-import LeaveApplicationStudentCard from "../components/LeaveApplicationStudentCard";
 
-const LeaveApplicationScreen = () => {
+const LeaveApplicationStudentScreen = () => {
   const navigation = useNavigation();
   const isFocused = useIsFocused();
   const [user, setUser] = useState("");
   const [initializing, setInitializing] = useState(true);
-  const [students, setStudents] = useState([]);
+  const [leaveApplications, setLeaveApplications] = useState([]);
+  const {
+    params: { id, name, matric },
+  } = useRoute();
 
   const getUser = async () => {
     getDoc(doc(db, "users", auth.currentUser.uid)).then((snapshot) => {
@@ -48,34 +53,21 @@ const LeaveApplicationScreen = () => {
     getUser();
   }, []);
 
-  const getStudents = async () => {
+  const getLeaveAppplication = async () => {
     try {
       const q = query(
-        collection(db, "users"),
-        where("type", "==", "student"),
-        where("classroom", "==", user.classroom)
+        collection(db, "leave_application"),
+        where("classroom", "==", user.classroom),
+        where("uid", "==", id),
+        orderBy("timestamp", "desc"),
+        orderBy("status", "desc")
       );
-      const studentsSnapshot = await getDocs(q);
-      const students = [];
-
-      for (const studentDoc of studentsSnapshot.docs) {
-        const studentId = studentDoc.id;
-
-        const leaveQuery = query(
-          collection(db, "leave_application"),
-          where("uid", "==", studentId),
-          where("status", "==", "Pending")
-        );
-        const leaveSnapshot = await getDocs(leaveQuery);
-        const pendingLeaveCount = leaveSnapshot.size;
-
-        students.push({
-          id: studentId,
-          pendingLeaveCount: pendingLeaveCount,
-          ...studentDoc.data(),
-        });
-      }
-      setStudents(students);
+      const data = await getDocs(q);
+      const filteredData = data.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+      setLeaveApplications(filteredData);
       if (initializing) {
         setInitializing(false);
       }
@@ -86,13 +78,13 @@ const LeaveApplicationScreen = () => {
 
   useEffect(() => {
     if (user) {
-      getStudents();
+      getLeaveAppplication();
     }
   }, [user]);
 
   useEffect(() => {
     if (isFocused) {
-      getStudents();
+      getLeaveAppplication();
     }
   }, [isFocused]);
 
@@ -140,13 +132,21 @@ const LeaveApplicationScreen = () => {
             }}
             className="px-5 space-y-2 bg-[#F1F5F8] h-full"
           >
-            {students.map((student) => (
-              <LeaveApplicationStudentCard
-                key={student.id}
-                id={student.id}
-                name={student.name}
-                matric={student.matric}
-                pendingLeaveCount={student.pendingLeaveCount}
+            {leaveApplications.map((leaveApplication) => (
+              <LeaveStatusCard
+                key={leaveApplication.id}
+                id={leaveApplication.id}
+                type={"lecturer"}
+                uid={leaveApplication.uid}
+                name={leaveApplication.name}
+                matric={leaveApplication.matric}
+                sessionId={leaveApplication.sessionId}
+                session={leaveApplication.session}
+                reason={leaveApplication.reason}
+                details={leaveApplication.details}
+                status={leaveApplication.status}
+                timestamp={leaveApplication.timestamp}
+                classroom={leaveApplication.classroom}
               />
             ))}
             <View className="my-20"></View>
@@ -187,4 +187,4 @@ const LeaveApplicationScreen = () => {
   );
 };
 
-export default LeaveApplicationScreen;
+export default LeaveApplicationStudentScreen;

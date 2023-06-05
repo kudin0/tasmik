@@ -47,17 +47,38 @@ const TasmikScreen = () => {
   }, []);
 
   const getTasmikSessions = async () => {
-    const q = query(
-      collection(db, "classroom", user.classroom, "session"),
-      where("past", "==", "no")
+    const sessionQuery = query(
+      collection(db, "classroom", user.classroom, "session")
     );
+
     try {
-      const data = await getDocs(q);
-      const filteredData = data.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      }));
-      setTasmikSessions(filteredData);
+      const sessionSnapshot = await getDocs(sessionQuery);
+      const sessionData = [];
+
+      for (const docSnap of sessionSnapshot.docs) {
+        const sessionId = docSnap.id;
+
+        const attendanceDocRef = doc(
+          db,
+          "classroom",
+          user.classroom,
+          "session",
+          sessionId,
+          "attendance",
+          user.uid
+        );
+
+        const attendanceDoc = await getDoc(attendanceDocRef);
+
+        if (!attendanceDoc.exists()) {
+          sessionData.push({
+            id: sessionId,
+            ...docSnap.data(),
+          });
+        }
+      }
+
+      setTasmikSessions(sessionData);
     } catch (error) {
       console.log(error);
     }
@@ -221,10 +242,7 @@ const TasmikScreen = () => {
               <Text className="text-xs text-[#6c757d]">Home</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity
-            className=""
-            onPress={handleTasmikButton}
-          >
+          <TouchableOpacity className="" onPress={handleTasmikButton}>
             <View className="h-full items-center space-y-1">
               <CalendarDaysIcon size={30} color="#826aed" />
               <Text className="text-xs text-[#826aed]">Attendance</Text>

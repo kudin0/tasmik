@@ -48,7 +48,7 @@ const ApplyLeaveStatusScreen = () => {
       const q = query(
         collection(db, "leave_application"),
         where("uid", "==", user.uid),
-        orderBy("timestamp", "asc")
+        orderBy("timestamp", "desc")
       );
       const data = await getDocs(q);
       const filteredData = data.docs.map((doc) => ({

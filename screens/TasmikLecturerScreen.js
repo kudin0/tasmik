@@ -47,10 +47,7 @@ const TasmikLecturerScreen = () => {
   }, []);
 
   const getTasmikSessions = async () => {
-    const q = query(
-      collection(db, "classroom", user.classroom, "session"),
-      where("past", "==", "no")
-    );
+    const q = query(collection(db, "classroom", user.classroom, "session"));
     try {
       const data = await getDocs(q);
       const filteredData = data.docs.map((doc) => ({
@@ -139,6 +136,23 @@ const TasmikLecturerScreen = () => {
             </Text>
             <Text className="text-[#6c757d] font-semibold text-base">Term</Text>
           </View>
+        </View>
+        <View className="flex-row mx-6 items-center justify-between space-x-3 mb-1">
+          <Text className="text-base text-[#6c757d] font-semibold">
+            Timeline
+          </Text>
+          <TouchableOpacity className="border border-[#826aed] px-2 py-1 rounded-full flex-row items-center space-x-1">
+            <CalendarIcon size={20} color="#826aed" />
+            <Text className="text-base text-[#826aed] font-semibold">
+              Tasmik Balance
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity className="border border-[#826aed] px-2 py-1 rounded-full flex-row items-center space-x-1">
+            <ArrowPathIcon size={20} color="#826aed" />
+            <Text className="text-base text-[#826aed] font-semibold">
+              Refresh
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
 
