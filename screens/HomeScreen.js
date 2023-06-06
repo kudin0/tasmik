@@ -97,18 +97,11 @@ function HomeScreen() {
   };
 
   useEffect(() => {
-    if (user) {
+    if (user && isFocused) {
       getTasmikSessions();
       getAnnouncements();
     }
-  }, [user]);
-
-  useEffect(() => {
-    if (isFocused) {
-      getTasmikSessions();
-      getAnnouncements();
-    }
-  }, [isFocused]);
+  }, [user, isFocused]);
 
   const logOut = () => {
     signOut(auth)

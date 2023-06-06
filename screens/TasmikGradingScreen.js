@@ -20,6 +20,7 @@ import {
   getDoc,
   getDocs,
   query,
+  setDoc,
   where,
 } from "firebase/firestore";
 import { auth, db } from "../firebase";
@@ -31,41 +32,70 @@ const TasmikGradingScreen = () => {
   const [comment, setComment] = useState("");
 
   const {
-    params: { classroom, sessionId, sessionTitle, date, studentId },
+    params: { classroom, sessionTitle, sessionId, date, id, name, matric },
   } = useRoute();
 
   const alertFormIncomplete = () => {
-    Alert.alert("Application Incomplete", "Please fill out all fields.", [
+    Alert.alert("Report Incomplete", "Please fill out report fields.", [
       { text: "OK", onPress: null },
     ]);
   };
 
-  const handleForm = async () => {
-    if (!leaveReason || !selectedSession) {
+  const handleReportButton = async () => {
+    if (!comment) {
       alertFormIncomplete();
       return;
     }
     try {
-      await addDoc(
-        collection(
-          db,
-          "users",
-          studentId,
-          "reports",
-          classroom,
-          "session",
-          sessionId
-        ),
-        {
-          title: sessionTitle,
-          status: "Attend",
-          date: date,
-          comment1: comment,
-        }
+      const reportDocRef = doc(
+        db,
+        "classroom",
+        classroom,
+        "session",
+        sessionId,
+        "report",
+        id
       );
-      navigation.navigate("GradingScreen");
+      await setDoc(reportDocRef, {
+        comment: comment,
+        uid: id,
+        session: sessionId,
+        sessionTitle: sessionTitle,
+        date: date,
+      });
     } catch (error) {
       console.log(error);
+    } finally {
+      navigation.goBack();
+    }
+  };
+
+  const handleForm = async () => {
+    if (!comment) {
+      alertFormIncomplete();
+      return;
+    }
+    try {
+      const reportDocRef = doc(
+        db,
+        "classroom",
+        classroom,
+        "session",
+        sessionId,
+        "report",
+        id
+      );
+      await setDoc(reportDocRef, {
+        comment: comment,
+        uid: id,
+        session: sessionId,
+        sessionTitle: sessionTitle,
+        date: date,
+      });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      navigation.goBack();
     }
   };
 
@@ -84,22 +114,27 @@ const TasmikGradingScreen = () => {
             <ArrowLeftIcon size={20} color="#ffffff" />
           </TouchableOpacity>
           <Text className="text-xl text-[#ffffff] font-extrabold">
-            Grading Page
+            Write Report
           </Text>
         </View>
 
         <View className="bg-[#F1F5F8] h-full pt-[10px] px-5 space-y-1">
           {/* Content */}
           <ScrollView className="">
-            <Text className=" text-xl font-bold text-[#826aed]">
-              {sessionTitle}
-            </Text>
+            <View className="space-y-2">
+              <Text className=" text-xl font-bold text-[#826aed]">
+                {sessionTitle}
+              </Text>
+              <Text className=" text-xl font-bold text-[#212529]">
+                {name} | {matric}
+              </Text>
+            </View>
 
             {/* Form */}
-            <View className="my-1">
+            <View className="mt-5">
               <View className="flex-row items-center mb-2">
                 <Text className="mx-2 text-left text-lg font-semibold text-[#826aed]">
-                  Aspect #1
+                  Report
                 </Text>
               </View>
               <TextInput
@@ -109,17 +144,17 @@ const TasmikGradingScreen = () => {
                 className="mb-3 pl-2 h-24 bg-white rounded-lg text-lg text-[#212529] shadow-sm"
                 onChangeText={(comment) => setComment(comment)}
                 value={comment}
-                placeholder="Comment for Aspect #1"
+                placeholder="Write your report here..."
                 placeholderTextColor="#adb5bd"
               />
             </View>
 
             <TouchableOpacity
-              onPress={() => {}}
+              onPress={handleForm}
               className="w-[270px] mt-[100px] items-center self-center bg-[#826aed] shadow shadow-black/30 rounded-xl p-3"
             >
               <Text className="text-center text-white text-2xl font-bold">
-                Mark Attendance
+                Add Report
               </Text>
             </TouchableOpacity>
           </ScrollView>

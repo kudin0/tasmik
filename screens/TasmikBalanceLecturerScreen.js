@@ -10,8 +10,7 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
-import { HomeIcon, UserCircleIcon } from "react-native-heroicons/outline";
-import { ArrowLeftIcon, CalendarDaysIcon } from "react-native-heroicons/solid";
+import { ArrowLeftIcon } from "react-native-heroicons/solid";
 import SafeViewAndroid from "../components/SafeViewAndroid";
 import {
   collection,
@@ -23,14 +22,16 @@ import {
   where,
 } from "firebase/firestore";
 import { auth, db } from "../firebase";
-import LeaveApplicationStudentCard from "../components/LeaveApplicationStudentCard";
+import TasmikBalanceCard from "../components/TasmikBalanceCard";
+import StudentBalanceCard from "../components/StudentBalanceCard";
 
-const LeaveApplicationScreen = () => {
+const TasmikBalanceLecturerScreen = () => {
   const navigation = useNavigation();
   const isFocused = useIsFocused();
   const [user, setUser] = useState("");
   const [initializing, setInitializing] = useState(true);
   const [students, setStudents] = useState([]);
+  const [attendedCount, setAttendedCount] = useState("");
 
   const getUser = async () => {
     getDoc(doc(db, "users", auth.currentUser.uid)).then((snapshot) => {
@@ -47,30 +48,53 @@ const LeaveApplicationScreen = () => {
   }, []);
 
   const getStudents = async () => {
+    const studentQuery = query(
+      collection(db, "users"),
+      where("type", "==", "student"),
+      where("classroom", "==", user.classroom)
+    );
     try {
-      const q = query(
-        collection(db, "users"),
-        where("type", "==", "student"),
-        where("classroom", "==", user.classroom)
-      );
-      const studentsSnapshot = await getDocs(q);
+      const studentsSnapshot = await getDocs(studentQuery);
       const students = [];
+
+      const sessionQuery = query(
+        collection(db, "classroom", user.classroom, "session")
+      );
+      const sessionSnapshot = await getDocs(sessionQuery);
+      const totalSessions = sessionSnapshot.size;
 
       for (const studentDoc of studentsSnapshot.docs) {
         const studentId = studentDoc.id;
+        let count = 0;
 
-        const leaveQuery = query(
-          collection(db, "leave_application"),
-          where("uid", "==", studentId),
-          where("status", "==", "Pending")
-        );
-        const leaveSnapshot = await getDocs(leaveQuery);
-        const pendingLeaveCount = leaveSnapshot.size;
+        for (const sessionDocSnap of sessionSnapshot.docs) {
+          const sessionId = sessionDocSnap.id;
+
+          const attendanceDocRef = doc(
+            db,
+            "classroom",
+            user.classroom,
+            "session",
+            sessionId,
+            "attendance",
+            studentId
+          );
+
+          const attendanceDoc = await getDoc(attendanceDocRef);
+
+          if (
+            attendanceDoc.exists() &&
+            attendanceDoc.data().status === "Attended"
+          ) {
+            count++;
+          }
+        }
 
         students.push({
           id: studentId,
-          pendingLeaveCount: pendingLeaveCount,
           ...studentDoc.data(),
+          attendedCount: count,
+          totalSession: totalSessions,
         });
       }
       setStudents(students);
@@ -86,16 +110,6 @@ const LeaveApplicationScreen = () => {
       getStudents();
     }
   }, [user, isFocused]);
-
-  const handleTasmikButton = () => {
-    if (user.type === "lecturer") {
-      navigation.navigate("TasmikLecturer");
-    }
-
-    if (user.type === "student") {
-      navigation.navigate("Tasmik");
-    }
-  };
 
   if (initializing)
     return (
@@ -119,12 +133,12 @@ const LeaveApplicationScreen = () => {
             <ArrowLeftIcon size={20} color="#ffffff" />
           </TouchableOpacity>
           <Text className="text-xl text-[#ffffff] font-extrabold">
-            Leave Application
+            Tasmik Balance
           </Text>
         </View>
 
         {/* Content */}
-        <View className="">
+        <View className="bg-[#F1F5F8] pt-2">
           <ScrollView
             contentContainerStyle={{
               paddingBottom: 100,
@@ -132,50 +146,21 @@ const LeaveApplicationScreen = () => {
             className="px-5 space-y-2 bg-[#F1F5F8] h-full"
           >
             {students.map((student) => (
-              <LeaveApplicationStudentCard
+              <StudentBalanceCard
                 key={student.id}
-                id={student.id}
+                uid={student.id}
                 name={student.name}
                 matric={student.matric}
-                pendingLeaveCount={student.pendingLeaveCount}
+                attendedCount={student.attendedCount}
+                totalSession={student.totalSession}
               />
             ))}
             <View className="my-20"></View>
           </ScrollView>
-        </View>
-
-        {/* Bottom Navigation */}
-        <View className="absolute inset-x-0 bottom-0 h-[90px] pb-3 bg-white shadow shadow-black/10">
-          <View className="flex-row justify-between px-14 pt-[6px]">
-            <TouchableOpacity
-              className=""
-              onPress={() => navigation.navigate("Profile")}
-            >
-              <View className="h-full items-center space-y-1">
-                <UserCircleIcon size={30} color="#6c757d" />
-                <Text className="text-xs text-[#6c757d]">Account</Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity
-              className=""
-              onPress={() => navigation.navigate("Home")}
-            >
-              <View className="h-full items-center space-y-1">
-                <HomeIcon size={30} color="#6c757d" />
-                <Text className="text-xs text-[#6c757d]">Home</Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity className="" onPress={handleTasmikButton}>
-              <View className="h-full items-center space-y-1">
-                <CalendarDaysIcon size={30} color="#6c757d" />
-                <Text className="text-xs text-[#6c757d]">Attendance</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
         </View>
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );
 };
 
-export default LeaveApplicationScreen;
+export default TasmikBalanceLecturerScreen;

@@ -141,7 +141,10 @@ const TasmikLecturerScreen = () => {
           <Text className="text-base text-[#6c757d] font-semibold">
             Timeline
           </Text>
-          <TouchableOpacity className="border border-[#826aed] px-2 py-1 rounded-full flex-row items-center space-x-1">
+          <TouchableOpacity
+            className="border border-[#826aed] px-2 py-1 rounded-full flex-row items-center space-x-1"
+            onPress={() => navigation.navigate("TasmikBalanceLecturer")}
+          >
             <CalendarIcon size={20} color="#826aed" />
             <Text className="text-base text-[#826aed] font-semibold">
               Tasmik Balance

@@ -70,7 +70,10 @@ const TasmikScreen = () => {
 
         const attendanceDoc = await getDoc(attendanceDocRef);
 
-        if (!attendanceDoc.exists()) {
+        if (
+          !attendanceDoc.exists() ||
+          attendanceDoc.data().status !== "Attended"
+        ) {
           sessionData.push({
             id: sessionId,
             ...docSnap.data(),
@@ -81,6 +84,8 @@ const TasmikScreen = () => {
       setTasmikSessions(sessionData);
     } catch (error) {
       console.log(error);
+    } finally {
+      setInitializing(false);
     }
   };
 
@@ -88,9 +93,6 @@ const TasmikScreen = () => {
     getDoc(doc(db, "classroom", user.classroom)).then((snapshot) => {
       if (snapshot.exists) {
         setClassroom(snapshot.data());
-        if (initializing) {
-          setInitializing(false);
-        }
       } else {
         console.log("User does not exists");
       }
@@ -186,7 +188,10 @@ const TasmikScreen = () => {
             <Text className="text-base text-[#6c757d] font-semibold">
               Timeline
             </Text>
-            <TouchableOpacity className="border border-[#826aed] px-2 py-1 rounded-full flex-row items-center space-x-1">
+            <TouchableOpacity
+              className="border border-[#826aed] px-2 py-1 rounded-full flex-row items-center space-x-1"
+              onPress={() => navigation.navigate("TasmikBalance")}
+            >
               <CalendarIcon size={20} color="#826aed" />
               <Text className="text-base text-[#826aed] font-semibold">
                 Tasmik Balance

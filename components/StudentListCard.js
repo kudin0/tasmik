@@ -7,7 +7,7 @@ import {
 } from "react-native-heroicons/solid";
 
 const StudentsListCard = ({
-  studentId,
+  id,
   name,
   matric,
   status,
@@ -39,7 +39,7 @@ const StudentsListCard = ({
           </View>
         </View>
         <View className="flex-row space-x-3">
-          {status != "attended" ? (
+          {status !== "Attended" ? (
             <TouchableOpacity
               className="items-center"
               onPress={onPressAttendance}
@@ -48,8 +48,21 @@ const StudentsListCard = ({
               <Text className="text-center text-[#6c757d] text-base">{`Mark \nAttendance`}</Text>
             </TouchableOpacity>
           ) : null}
-          {status === "attended" ? (
-            <TouchableOpacity className="items-center">
+          {status === "Attended" ? (
+            <TouchableOpacity
+              className="items-center"
+              onPress={() => {
+                navigation.navigate("TasmikGrading", {
+                  classroom,
+                  sessionTitle,
+                  sessionId,
+                  date,
+                  id,
+                  name,
+                  matric,
+                });
+              }}
+            >
               <PencilSquareIcon size={25} color="#826aed" />
               <Text className="text-[#6c757d] text-base">Add Report</Text>
             </TouchableOpacity>

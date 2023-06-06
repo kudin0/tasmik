@@ -98,30 +98,6 @@ const TasmikDetailScreen = () => {
     }
   }, [initializing]);
 
-  const StudentsList = () => {
-    return (
-      <View className="px-5 pt-3 space-y-3 h-full">
-        <Text className="text-[#6c757d] text-lg">List of Students</Text>
-        <ScrollView>
-          {students.map((student) => (
-            <StudentsListCard
-              key={student.id}
-              id={student.id}
-              name={student.name}
-              status={student.status}
-              matric={student.matric}
-              sessionTitle={title}
-              sessionId={id}
-              onPressAttendance={() =>
-                handleAttendanceButton(student.id, classroom, id)
-              }
-            />
-          ))}
-        </ScrollView>
-      </View>
-    );
-  };
-
   const handleAttendanceButton = async (studentId, classroom, session) => {
     try {
       const attendanceDocRef = doc(
@@ -134,7 +110,7 @@ const TasmikDetailScreen = () => {
         studentId
       );
       await setDoc(attendanceDocRef, {
-        status: "attended",
+        status: "Attended",
         uid: studentId,
         session: session,
         sessionTitle: title,
@@ -145,6 +121,32 @@ const TasmikDetailScreen = () => {
     } finally {
       setInitializing(true);
     }
+  };
+
+  const StudentsList = () => {
+    return (
+      <View className="px-5 pt-3 space-y-3 h-full">
+        <Text className="text-[#6c757d] text-lg">List of Students</Text>
+        <ScrollView>
+          {students.map((student) => (
+            <StudentsListCard
+              key={student.id}
+              id={student.id}
+              name={student.name}
+              status={student.status}
+              matric={student.matric}
+              classroom={classroom}
+              sessionTitle={title}
+              sessionId={id}
+              date={date}
+              onPressAttendance={() =>
+                handleAttendanceButton(student.id, classroom, id)
+              }
+            />
+          ))}
+        </ScrollView>
+      </View>
+    );
   };
 
   if (initializing)

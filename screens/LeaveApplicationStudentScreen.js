@@ -77,16 +77,10 @@ const LeaveApplicationStudentScreen = () => {
   };
 
   useEffect(() => {
-    if (user) {
+    if (user && isFocused) {
       getLeaveAppplication();
     }
-  }, [user]);
-
-  useEffect(() => {
-    if (isFocused) {
-      getLeaveAppplication();
-    }
-  }, [isFocused]);
+  }, [user, isFocused]);
 
   const handleTasmikButton = () => {
     if (user.type === "lecturer") {
