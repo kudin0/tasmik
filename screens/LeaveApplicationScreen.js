@@ -132,13 +132,7 @@ const LeaveApplicationScreen = () => {
             className="px-5 space-y-2 bg-[#F1F5F8] h-full"
           >
             {students.map((student) => (
-              <LeaveApplicationStudentCard
-                key={student.id}
-                id={student.id}
-                name={student.name}
-                matric={student.matric}
-                pendingLeaveCount={student.pendingLeaveCount}
-              />
+              <LeaveApplicationStudentCard key={student.id} student={student} />
             ))}
             <View className="my-20"></View>
           </ScrollView>

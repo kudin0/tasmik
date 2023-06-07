@@ -32,42 +32,13 @@ const TasmikGradingScreen = () => {
   const [comment, setComment] = useState("");
 
   const {
-    params: { classroom, sessionTitle, sessionId, date, id, name, matric },
+    params: { classroom, tasmik, id, name, matric },
   } = useRoute();
 
   const alertFormIncomplete = () => {
     Alert.alert("Report Incomplete", "Please fill out report fields.", [
       { text: "OK", onPress: null },
     ]);
-  };
-
-  const handleReportButton = async () => {
-    if (!comment) {
-      alertFormIncomplete();
-      return;
-    }
-    try {
-      const reportDocRef = doc(
-        db,
-        "classroom",
-        classroom,
-        "session",
-        sessionId,
-        "report",
-        id
-      );
-      await setDoc(reportDocRef, {
-        comment: comment,
-        uid: id,
-        session: sessionId,
-        sessionTitle: sessionTitle,
-        date: date,
-      });
-    } catch (error) {
-      console.log(error);
-    } finally {
-      navigation.goBack();
-    }
   };
 
   const handleForm = async () => {
@@ -81,16 +52,16 @@ const TasmikGradingScreen = () => {
         "classroom",
         classroom,
         "session",
-        sessionId,
+        tasmik.id,
         "report",
         id
       );
       await setDoc(reportDocRef, {
         comment: comment,
         uid: id,
-        session: sessionId,
-        sessionTitle: sessionTitle,
-        date: date,
+        session: tasmik.id,
+        sessionTitle: tasmik.title,
+        date: tasmik.date,
       });
     } catch (error) {
       console.log(error);
@@ -123,7 +94,7 @@ const TasmikGradingScreen = () => {
           <ScrollView className="">
             <View className="space-y-2">
               <Text className=" text-xl font-bold text-[#826aed]">
-                {sessionTitle}
+                {tasmik.title}
               </Text>
               <Text className=" text-xl font-bold text-[#212529]">
                 {name} | {matric}

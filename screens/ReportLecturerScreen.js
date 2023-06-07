@@ -4,9 +4,10 @@ import {
   TouchableOpacity,
   SafeAreaView,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import React from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import {
   ArrowLeftIcon,
   ArrowPathIcon,
@@ -16,9 +17,110 @@ import {
 import SafeViewAndroid from "../components/SafeViewAndroid";
 import ReportCard from "../components/ReportCard";
 import { CalendarDaysIcon } from "react-native-heroicons/solid";
+import StudentReportList from "../components/StudentReportList";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
+import { auth, db } from "../firebase";
+import { useState } from "react";
+import { useEffect } from "react";
 
 const ReportLecturerScreen = () => {
   const navigation = useNavigation();
+  const isFocused = useIsFocused();
+  const [user, setUser] = useState("");
+  const [initializing, setInitializing] = useState(true);
+  const [students, setStudents] = useState([]);
+
+  const getUser = async () => {
+    getDoc(doc(db, "users", auth.currentUser.uid)).then((snapshot) => {
+      if (snapshot.exists) {
+        setUser(snapshot.data());
+      } else {
+        console.log("User does not exists");
+      }
+    });
+  };
+
+  useEffect(() => {
+    getUser();
+  }, []);
+
+  const getStudents = async () => {
+    const studentQuery = query(
+      collection(db, "users"),
+      where("type", "==", "student"),
+      where("classroom", "==", user.classroom)
+    );
+    try {
+      const studentsSnapshot = await getDocs(studentQuery);
+      const students = [];
+
+      const sessionQuery = query(
+        collection(db, "classroom", user.classroom, "session")
+      );
+      const sessionSnapshot = await getDocs(sessionQuery);
+      const totalSessions = sessionSnapshot.size;
+
+      for (const studentDoc of studentsSnapshot.docs) {
+        const studentId = studentDoc.id;
+        let count = 0;
+
+        for (const sessionDocSnap of sessionSnapshot.docs) {
+          const sessionId = sessionDocSnap.id;
+
+          const attendanceDocRef = doc(
+            db,
+            "classroom",
+            user.classroom,
+            "session",
+            sessionId,
+            "attendance",
+            studentId
+          );
+
+          const attendanceDoc = await getDoc(attendanceDocRef);
+
+          if (
+            attendanceDoc.exists() &&
+            attendanceDoc.data().status === "Attended"
+          ) {
+            count++;
+          }
+        }
+
+        students.push({
+          id: studentId,
+          ...studentDoc.data(),
+          attendedCount: count,
+          totalSession: totalSessions,
+        });
+      }
+      setStudents(students);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setInitializing(false);
+    }
+  };
+
+  useEffect(() => {
+    if (user && isFocused) {
+      getStudents();
+    }
+  }, [user, isFocused]);
+
+  if (initializing)
+    return (
+      <View className="items-center justify-center w-screen h-screen bg-white">
+        <ActivityIndicator size="large" color="826aed" />
+      </View>
+    );
 
   return (
     <SafeAreaView
@@ -33,28 +135,17 @@ const ReportLecturerScreen = () => {
         >
           <ArrowLeftIcon size={20} color="#ffffff" />
         </TouchableOpacity>
-        <Text className="text-xl text-[#ffffff] font-extrabold">Report for Lecturer</Text>
+        <Text className="text-xl text-[#ffffff] font-extrabold">
+          Performance Report
+        </Text>
       </View>
 
       <View className="bg-[#F1F5F8] h-full">
         {/* content */}
         <ScrollView className="mx-5 space-y-2 mt-2">
-          <ReportCard
-            id={"0001"}
-            title={"Module 1 - Week 1"}
-            date={"##/##/####"}
-            marks1={10}
-            marks2={8}
-            marks3={8}
-            aspect1={`Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tempor, mi eu accumsan imperdiet, sem nibh malesuada magna, ac placerat leo orci ut arcu.`}
-            aspect2={`Lorem ipsum dolor sit amet, consectetur adipiscing elit.`}
-            aspect3={`Lorem ipsum dolor sit amet, consectetur adipiscing elit.`}
-          />
-          <ReportCard
-            id={"0001"}
-            title={"Module 2 - Week 2"}
-            date={"##/##/####"}
-          />
+          {students.map((student) => (
+            <StudentReportList key={student.id} student={student} />
+          ))}
         </ScrollView>
       </View>
 

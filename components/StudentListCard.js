@@ -12,20 +12,24 @@ const StudentsListCard = ({
   matric,
   status,
   classroom,
-  sessionId,
-  sessionTitle,
-  date,
+  tasmik,
   onPressAttendance,
 }) => {
   const navigation = useNavigation();
   const [user, setUser] = useState("");
   const [initializing, setInitializing] = useState(true);
+  console.log(tasmik);
 
   return (
     <View className="relative mt-2 flex-row">
       <View className="bg-[#ffffff] justify-between items-center rounded-lg w-full flex-row p-4 border shadow shadow-black/10">
         <View>
-          <Text className="text-[#212529] font-bold text-lg">{name}</Text>
+          <Text
+            numberOfLines={1}
+            className="text-[#212529] font-bold text-lg w-48"
+          >
+            {name}
+          </Text>
           <Text className="text-[#6c757d] font-semibold text-base">
             {matric}
           </Text>
@@ -54,9 +58,7 @@ const StudentsListCard = ({
               onPress={() => {
                 navigation.navigate("TasmikGrading", {
                   classroom,
-                  sessionTitle,
-                  sessionId,
-                  date,
+                  tasmik,
                   id,
                   name,
                   matric,

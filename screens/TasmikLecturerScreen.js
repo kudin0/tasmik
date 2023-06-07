@@ -164,12 +164,7 @@ const TasmikLecturerScreen = () => {
         {tasmikSessions.map((tasmik) => (
           <TasmikSessionCard
             key={tasmik.id}
-            id={tasmik.id}
-            title={tasmik.title}
-            date={tasmik.date}
-            time={tasmik.time}
-            place={tasmik.place}
-            details={tasmik.details}
+            tasmik={tasmik}
             classroom={user.classroom}
           />
         ))}

@@ -2,12 +2,7 @@ import { View, Text, TouchableOpacity, Image } from "react-native";
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 
-const LeaveApplicationStudentCard = ({
-  id,
-  name,
-  matric,
-  pendingLeaveCount,
-}) => {
+const LeaveApplicationStudentCard = ({ student }) => {
   const navigation = useNavigation();
 
   return (
@@ -15,18 +10,22 @@ const LeaveApplicationStudentCard = ({
       <TouchableOpacity
         className="flex-row justify-between"
         onPress={() => {
-          navigation.navigate("LeaveApplicationStudent", { id, name, matric });
+          navigation.navigate("LeaveApplicationStudent", { student });
         }}
       >
         <View className="flex">
-          <Text className="text-[#212529] font-bold text-lg">{name}</Text>
-          <Text className="text-[#826aed] font-bold text-lg">{matric}</Text>
+          <Text className="text-[#212529] font-bold text-lg">
+            {student.name}
+          </Text>
+          <Text className="text-[#826aed] font-bold text-lg">
+            {student.matric}
+          </Text>
         </View>
         <View className="items-end justify-center">
           <Text className="text-[#6c757d] font-bold text-lg">
             Pending Application:{" "}
             <Text className="text-[#826aed] font-bold text-lg">
-              {pendingLeaveCount}
+              {student.pendingLeaveCount}
             </Text>
           </Text>
         </View>

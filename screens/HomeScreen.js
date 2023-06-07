@@ -162,7 +162,7 @@ function HomeScreen() {
     }
 
     if (user.type === "student") {
-      navigation.navigate("Report");
+      navigation.navigate("Report", { uid: user.uid });
     }
   };
 
@@ -219,11 +219,7 @@ function HomeScreen() {
             <AnnouncementCard
               key={announcement.id}
               screen={"home"}
-              title={announcement.title}
-              userType={user.type}
-              byName={announcement.by}
-              date={announcement.date}
-              details={announcement.details}
+              announcement={announcement}
             />
           ))}
         </ScrollView>
@@ -244,15 +240,7 @@ function HomeScreen() {
           <View className="rounded-b-2xl min-h-[60px] bg-white py-3">
             {tasmikSessions.map((tasmik, index) => (
               <View key={tasmik.id}>
-                <ScheduleCard
-                  id={tasmik.id}
-                  title={tasmik.title}
-                  date={tasmik.date}
-                  time={tasmik.time}
-                  place={tasmik.place}
-                  details={tasmik.details}
-                  classroom={user.classroom}
-                />
+                <ScheduleCard tasmik={tasmik} />
                 {index != tasmikSessions.length - 1 ? (
                   <View className="border-b border-gray-400" />
                 ) : null}

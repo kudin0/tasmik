@@ -26,7 +26,6 @@ import ReportLecturerScreen from "./screens/ReportLecturerScreen";
 import LeaveApplicationStudentScreen from "./screens/LeaveApplicationStudentScreen";
 import TasmikBalanceScreen from "./screens/TasmikBalanceScreen";
 import TasmikBalanceLecturerScreen from "./screens/TasmikBalanceLecturerScreen";
-import TasmikBalanceStudentScreen from "./screens/TasmikBalanceStudentScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -115,11 +114,6 @@ function App() {
       <Stack.Screen
         name="TasmikBalanceLecturer"
         component={TasmikBalanceLecturerScreen}
-        options={{ headerShown: false, animation: "none" }}
-      />
-      <Stack.Screen
-        name="TasmikBalanceStudent"
-        component={TasmikBalanceStudentScreen}
         options={{ headerShown: false, animation: "none" }}
       />
       <Stack.Screen

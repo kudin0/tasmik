@@ -8,9 +8,7 @@ import {
   Alert,
 } from "react-native";
 import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { setAnnouncement } from "../features/announcementSlice";
 import { ArrowLeftIcon, TrashIcon } from "react-native-heroicons/solid";
 import SafeViewAndroid from "../components/SafeViewAndroid";
 import { useState } from "react";
@@ -19,23 +17,9 @@ import { auth, db } from "../firebase";
 
 const AnnounceDetailScreen = () => {
   const navigation = useNavigation();
-  const dispatch = useDispatch();
   const {
-    params: { id, title, imgUrl, byName, date, details, userType },
+    params: { announcement },
   } = useRoute();
-
-  useEffect(() => {
-    dispatch(
-      setAnnouncement({
-        id,
-        title,
-        imgUrl,
-        byName,
-        date,
-        details,
-      })
-    );
-  }, []);
 
   const alertDelete = () => {
     Alert.alert(
@@ -54,7 +38,7 @@ const AnnounceDetailScreen = () => {
 
   const deleteAnnouncement = async () => {
     try {
-      await deleteDoc(doc(db, "announcement", id));
+      await deleteDoc(doc(db, "announcement", announcement.id));
       navigation.navigate("Announcement");
     } catch (error) {
       console.log(error);
@@ -76,7 +60,7 @@ const AnnounceDetailScreen = () => {
         <Text className="text-xl font-extrabold text-[#212529]">
           Announcement
         </Text>
-        {userType == "lecturer" ? (
+        {announcement.userType == "lecturer" ? (
           <TouchableOpacity
             className="absolute right-5 p-2 rounded-full"
             onPress={alertDelete}
@@ -87,16 +71,16 @@ const AnnounceDetailScreen = () => {
       </View>
       <ScrollView>
         <View className="bg-[#826aed] h-28 justify-center items-center">
-          <Text className="text-lg font-bold text-[#FBFAFF]">{title}</Text>
+          <Text className="text-lg font-bold text-[#FBFAFF]">{announcement.title}</Text>
         </View>
         <View className="mx-5 space-y-2 py-2 mb-2 border-b border-[#6c757d]">
           <Text className="text-[#6c757d] text-sm font-semibold">
-            Posted by {byName}
+            Posted by {announcement.byName}
           </Text>
-          <Text className="text-[#826aed] text-sm">{date}</Text>
+          <Text className="text-[#826aed] text-sm">{announcement.date}</Text>
         </View>
         <Text className="mx-5 text-[#212529] text-lg text-justify">
-          {details}
+          {announcement.details}
         </Text>
       </ScrollView>
     </SafeAreaView>

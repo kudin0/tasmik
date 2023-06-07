@@ -19,20 +19,7 @@ const ApplyLeaveDetailsScreen = () => {
   const [loading, setLoading] = useState(false);
 
   const {
-    params: {
-      id,
-      type,
-      uid,
-      name,
-      matric,
-      session,
-      sessionId,
-      reason,
-      details,
-      status,
-      timestamp,
-      classroom,
-    },
+    params: { leaveApplication },
   } = useRoute();
 
   const updateLeaveApplication = async () => {
@@ -42,10 +29,14 @@ const ApplyLeaveDetailsScreen = () => {
 
   const updateAttendance = async () => {
     try {
-      const classroomRef = doc(db, "classroom", classroom);
-      const sessionRef = doc(classroomRef, "session", sessionId);
+      const classroomRef = doc(db, "classroom", leaveApplication.classroom);
+      const sessionRef = doc(
+        classroomRef,
+        "session",
+        leaveApplication.sessionId
+      );
       const attendanceCollectionRef = collection(sessionRef, "attendance");
-      const documentRef = doc(attendanceCollectionRef, uid);
+      const documentRef = doc(attendanceCollectionRef, leaveApplication.uid);
 
       await setDoc(documentRef, {
         status: "Applied Leave",
@@ -66,7 +57,7 @@ const ApplyLeaveDetailsScreen = () => {
   };
 
   const rejectApplication = async () => {
-    const leaveApplication = doc(db, "leave_application", id);
+    const leaveApplication = doc(db, "leave_application", leaveApplication.id);
     await updateDoc(leaveApplication, { status: "Rejected" });
     navigation.navigate("LeaveApplication");
   };
@@ -99,18 +90,18 @@ const ApplyLeaveDetailsScreen = () => {
 
         <ScrollView className="mx-5 pt-3 space-y-4 h-full">
           <Text className="text-xl font-bold text-[#826aed]">
-            {name} | {matric}
+            {leaveApplication.name} | {leaveApplication.matric}
           </Text>
           <View className="space-y-1">
             <Text className="text-[#6c757d] text-lg">Session Applied</Text>
             <Text className="text-[#212529] text-lg font-semibold">
-              {session}
+              {leaveApplication.session}
             </Text>
           </View>
           <View className="space-y-1">
             <Text className="text-[#6c757d] text-lg">Time of Application</Text>
             <Text className="text-[#212529] text-lg font-semibold">
-              {timestamp}
+              {leaveApplication.timestamp}
             </Text>
           </View>
           <View className="space-y-1">
@@ -118,13 +109,13 @@ const ApplyLeaveDetailsScreen = () => {
               Status of Application
             </Text>
             <Text className="text-[#212529] text-lg font-semibold">
-              {status}
+              {leaveApplication.status}
             </Text>
           </View>
           <View className="space-y-1">
             <Text className="text-[#6c757d] text-lg">Reason for Leave</Text>
             <Text className="text-[#212529] text-lg font-semibold">
-              {reason}
+              {leaveApplication.reason}
             </Text>
           </View>
           <View className="space-y-1">
@@ -132,10 +123,10 @@ const ApplyLeaveDetailsScreen = () => {
               Details of Application
             </Text>
             <Text className="text-[#212529] text-lg font-semibold">
-              {details}
+              {leaveApplication.details}
             </Text>
           </View>
-          {status == "Pending" ? (
+          {leaveApplication.status == "Pending" ? (
             <View className="pt-[100px] space-y-2">
               <TouchableOpacity
                 onPress={approveApplication}

@@ -125,15 +125,8 @@ const ApplyLeaveStatusScreen = () => {
           {leaveApplications.map((leaveApplication) => (
             <LeaveStatusCard
               key={leaveApplication.id}
-              id={leaveApplication.id}
               type={"student"}
-              name={leaveApplication.name}
-              matric={leaveApplication.matric}
-              session={leaveApplication.session}
-              reason={leaveApplication.reason}
-              details={leaveApplication.details}
-              status={leaveApplication.status}
-              timestamp={leaveApplication.timestamp}
+              leaveApplication={leaveApplication}
             />
           ))}
         </ScrollView>

@@ -9,7 +9,11 @@ import {
   Keyboard,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { useIsFocused, useNavigation } from "@react-navigation/native";
+import {
+  useIsFocused,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
 import { ArrowLeftIcon } from "react-native-heroicons/solid";
 import SafeViewAndroid from "../components/SafeViewAndroid";
 import {
@@ -32,8 +36,12 @@ const TasmikBalanceScreen = () => {
   const [tasmikSessions, setTasmikSessions] = useState([]);
   const [attendedCount, setAttendedCount] = useState("");
 
+  const {
+    params: { uid },
+  } = useRoute();
+
   const getUser = async () => {
-    getDoc(doc(db, "users", auth.currentUser.uid)).then((snapshot) => {
+    getDoc(doc(db, "users", uid)).then((snapshot) => {
       if (snapshot.exists) {
         setUser(snapshot.data());
       } else {
@@ -151,9 +159,7 @@ const TasmikBalanceScreen = () => {
             {tasmikSessions.map((session) => (
               <TasmikBalanceCard
                 key={session.id}
-                title={session.title}
-                date={session.date}
-                status={session.status}
+                session={session}
               />
             ))}
             <View className="my-20"></View>

@@ -70,7 +70,10 @@ const TasmikPastScreen = () => {
         );
 
         const attendanceDoc = await getDoc(attendanceDocRef);
-        if (attendanceDoc.exists()) {
+        if (
+          attendanceDoc.exists() &&
+          attendanceDoc.data().status === "Attended"
+        ) {
           sessionData.push({
             id: sessionId,
             ...docSnap.data(),
@@ -185,7 +188,12 @@ const TasmikPastScreen = () => {
             <Text className="text-base text-[#6c757d] font-semibold">
               Timeline
             </Text>
-            <TouchableOpacity className="border border-[#826aed] px-2 py-1 rounded-full flex-row items-center space-x-1">
+            <TouchableOpacity
+              className="border border-[#826aed] px-2 py-1 rounded-full flex-row items-center space-x-1"
+              onPress={() =>
+                navigation.navigate("TasmikBalance", { uid: user.uid })
+              }
+            >
               <CalendarIcon size={20} color="#826aed" />
               <Text className="text-base text-[#826aed] font-semibold">
                 Tasmik Balance
@@ -207,14 +215,7 @@ const TasmikPastScreen = () => {
       {/* content */}
       <ScrollView className="px-5 space-y-2 bg-[#F1F5F8] h-full">
         {tasmikSessions.map((tasmik) => (
-          <TasmikSessionCard
-            key={tasmik.id}
-            title={tasmik.title}
-            date={tasmik.date}
-            time={tasmik.time}
-            place={tasmik.place}
-            details={tasmik.details}
-          />
+          <TasmikSessionCard key={tasmik.id} tasmik={tasmik} />
         ))}
       </ScrollView>
 

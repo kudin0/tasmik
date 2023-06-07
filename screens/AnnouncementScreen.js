@@ -120,12 +120,7 @@ const AnnouncementScreen = () => {
           {announcements.map((announcement) => (
             <AnnouncementCard
               key={announcement.id}
-              id={announcement.id}
-              userType={user.type}
-              title={announcement.title}
-              byName={announcement.by}
-              date={announcement.date}
-              details={announcement.details}
+              announcement={announcement}
             />
           ))}
 

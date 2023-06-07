@@ -36,7 +36,7 @@ const LeaveApplicationStudentScreen = () => {
   const [initializing, setInitializing] = useState(true);
   const [leaveApplications, setLeaveApplications] = useState([]);
   const {
-    params: { id, name, matric },
+    params: { student },
   } = useRoute();
 
   const getUser = async () => {
@@ -58,7 +58,7 @@ const LeaveApplicationStudentScreen = () => {
       const q = query(
         collection(db, "leave_application"),
         where("classroom", "==", user.classroom),
-        where("uid", "==", id),
+        where("uid", "==", student.id),
         orderBy("timestamp", "desc"),
         orderBy("status", "desc")
       );
@@ -129,18 +129,8 @@ const LeaveApplicationStudentScreen = () => {
             {leaveApplications.map((leaveApplication) => (
               <LeaveStatusCard
                 key={leaveApplication.id}
-                id={leaveApplication.id}
                 type={"lecturer"}
-                uid={leaveApplication.uid}
-                name={leaveApplication.name}
-                matric={leaveApplication.matric}
-                sessionId={leaveApplication.sessionId}
-                session={leaveApplication.session}
-                reason={leaveApplication.reason}
-                details={leaveApplication.details}
-                status={leaveApplication.status}
-                timestamp={leaveApplication.timestamp}
-                classroom={leaveApplication.classroom}
+                leaveApplication={leaveApplication}
               />
             ))}
             <View className="my-20"></View>

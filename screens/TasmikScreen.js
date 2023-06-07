@@ -190,7 +190,9 @@ const TasmikScreen = () => {
             </Text>
             <TouchableOpacity
               className="border border-[#826aed] px-2 py-1 rounded-full flex-row items-center space-x-1"
-              onPress={() => navigation.navigate("TasmikBalance")}
+              onPress={() =>
+                navigation.navigate("TasmikBalance", { uid: user.uid })
+              }
             >
               <CalendarIcon size={20} color="#826aed" />
               <Text className="text-base text-[#826aed] font-semibold">
@@ -213,16 +215,7 @@ const TasmikScreen = () => {
       {/* content */}
       <ScrollView className="px-5 space-y-2 bg-[#F1F5F8] h-full">
         {tasmikSessions.map((tasmik) => (
-          <TasmikSessionCard
-            key={tasmik.id}
-            id={tasmik.id}
-            title={tasmik.title}
-            date={tasmik.date}
-            time={tasmik.time}
-            place={tasmik.place}
-            details={tasmik.details}
-            classroom={user.classroom}
-          />
+          <TasmikSessionCard key={tasmik.id} tasmik={tasmik} />
         ))}
       </ScrollView>
 

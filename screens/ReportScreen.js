@@ -4,9 +4,10 @@ import {
   TouchableOpacity,
   SafeAreaView,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import React from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import {
   ArrowLeftIcon,
   ArrowPathIcon,
@@ -17,7 +18,15 @@ import SafeViewAndroid from "../components/SafeViewAndroid";
 import ReportCard from "../components/ReportCard";
 import { CalendarDaysIcon } from "react-native-heroicons/solid";
 import { auth, db } from "../firebase";
-import { collectionGroup, doc, getDoc, getDocs, query, where } from "firebase/firestore";
+import {
+  collection,
+  collectionGroup,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 import { useState } from "react";
 import { useEffect } from "react";
 import { set } from "firebase/database";
@@ -26,41 +35,105 @@ const ReportScreen = () => {
   const navigation = useNavigation();
   const [user, setUser] = useState("");
   const [reports, setReports] = useState([]);
+  const [attendedCount, setAttendedCount] = useState("");
+  const [tasmikSessions, setTasmikSessions] = useState([]);
+  const [initializing, setInitializing] = useState(true);
 
-  useEffect(() => {
-    getDoc(doc(db, "users", auth.currentUser.uid)).then((snapshot) => {
-      if (snapshot.exists) {
-        setUser(snapshot.data());
-      } else {
-        console.log("User does not exists");
-      }
-    });
-  }, []);
+  const {
+    params: { uid },
+  } = useRoute();
 
-  const getStudentAttendance = async () => {
-    const attedanceQuery = query(
-      collectionGroup(db, "attendance"),
-      where("uid", "==", user.uid)
-    );
-
+  const getUser = async () => {
     try {
-      const querySnapshot = await getDocs(attedanceQuery);
-      const attendanceDocs = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setReports(attendanceDocs);
-      console.log(attendanceDocs);
+      const userSnapshot = await getDoc(doc(db, "users", uid));
+      if (userSnapshot.exists) {
+        const classroomRef = doc(
+          db,
+          "classroom",
+          userSnapshot.data().classroom
+        );
+        const classroomSnapshot = await getDoc(classroomRef);
+        if (classroomSnapshot.exists) {
+          const lecturerName = classroomSnapshot.data().lecturer_name;
+          setUser((prevUser) => ({
+            ...prevUser,
+            lecturerName: lecturerName,
+          }));
+        }
+      } else {
+        console.log("User does not exist");
+      }
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
+    getUser();
+  }, []);
+
+  const getTasmikSessions = async () => {
+    const sessionQuery = query(
+      collection(db, "classroom", user.classroom, "session")
+    );
+
+    try {
+      const sessionSnapshot = await getDocs(sessionQuery);
+      const sessionData = [];
+      let count = 0;
+
+      for (const docSnap of sessionSnapshot.docs) {
+        const sessionId = docSnap.id;
+
+        const attendanceDocRef = doc(
+          db,
+          "classroom",
+          user.classroom,
+          "session",
+          sessionId,
+          "attendance",
+          user.uid
+        );
+
+        const attendanceDoc = await getDoc(attendanceDocRef);
+
+        let status = "none";
+        if (attendanceDoc.exists()) {
+          status = attendanceDoc.data().status;
+        }
+
+        if (status === "Attended") {
+          count++;
+        }
+
+        sessionData.push({
+          id: sessionId,
+          ...docSnap.data(),
+          status: status !== "none" ? status : "none",
+        });
+      }
+
+      setTasmikSessions(sessionData);
+      setAttendedCount(count);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setInitializing(false);
+    }
+  };
+
+  useEffect(() => {
     if (user) {
-      getStudentAttendance();
+      getTasmikSessions();
     }
   }, [user]);
+
+  if (initializing)
+    return (
+      <View className="items-center justify-center w-screen h-screen bg-white">
+        <ActivityIndicator size="large" color="826aed" />
+      </View>
+    );
 
   return (
     <SafeAreaView
@@ -78,26 +151,31 @@ const ReportScreen = () => {
         <Text className="text-xl text-[#ffffff] font-extrabold">Report</Text>
       </View>
 
-      <View className="bg-[#F1F5F8] h-full">
+      <View className="bg-[#F1F5F8] h-full px-5">
+        {/* Profile */}
+        <View className="mt-2 space-y-2">
+          <Text className="text-[#826aed] font-bold text-xl">User Profile</Text>
+          <View>
+            <Text className="text-[#212529] font-semibold text-lg w-fit">
+              Name:<Text className="text-[#212529]"> {user.name}</Text>
+            </Text>
+            <Text className="text-[#212529] font-semibold text-lg">
+              Matric: <Text className="text-[#212529]">{user.matric}</Text>
+            </Text>
+            <Text className="text-[#212529] font-semibold text-lg">
+              Session Attended:{" "}
+              <Text className="text-[#212529]">
+                {attendedCount}/{tasmikSessions.length}
+              </Text>
+            </Text>
+            <Text className="text-[#212529] font-semibold text-lg">
+              Lecturer:{" "}
+              <Text className="text-[#212529]">{user.lecturerName}</Text>
+            </Text>
+          </View>
+        </View>
         {/* content */}
-        <ScrollView className="mx-5 space-y-2 mt-2">
-          <ReportCard
-            id={"0001"}
-            title={"Module 1 - Week 1"}
-            date={"##/##/####"}
-            marks1={10}
-            marks2={8}
-            marks3={8}
-            aspect1={`Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tempor, mi eu accumsan imperdiet, sem nibh malesuada magna, ac placerat leo orci ut arcu.`}
-            aspect2={`Lorem ipsum dolor sit amet, consectetur adipiscing elit.`}
-            aspect3={`Lorem ipsum dolor sit amet, consectetur adipiscing elit.`}
-          />
-          <ReportCard
-            id={"0001"}
-            title={"Module 2 - Week 2"}
-            date={"##/##/####"}
-          />
-        </ScrollView>
+        <ScrollView className="mx-5 space-y-2 mt-2"></ScrollView>
       </View>
 
       {/* Bottom Navigation */}

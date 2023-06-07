@@ -29,12 +29,13 @@ import StudentsListCard from "../components/StudentListCard";
 const TasmikDetailScreen = () => {
   const navigation = useNavigation();
   const {
-    params: { id, title, date, time, place, details, classroom },
+    params: { tasmik, classroom },
   } = useRoute();
 
   const [user, setUser] = useState("");
   const [initializing, setInitializing] = useState(true);
   const [students, setStudents] = useState([]);
+  const [attendedCount, setAttendedCount] = useState(0);
 
   const fetchData = async () => {
     try {
@@ -65,7 +66,7 @@ const TasmikDetailScreen = () => {
             "classroom",
             classroom,
             "session",
-            id,
+            tasmik.id,
             "attendance",
             student.id
           );
@@ -80,7 +81,12 @@ const TasmikDetailScreen = () => {
         })
       );
 
+      const attendedCount = studentStatus.filter(
+        (student) => student.status === "Attended"
+      ).length;
+
       setStudents(studentStatus);
+      setAttendedCount(attendedCount);
     } catch (error) {
       console.log(error);
     } finally {
@@ -126,7 +132,12 @@ const TasmikDetailScreen = () => {
   const StudentsList = () => {
     return (
       <View className="px-5 pt-3 space-y-3 h-full">
-        <Text className="text-[#6c757d] text-lg">List of Students</Text>
+        <View className="flex-row justify-between">
+          <Text className="text-[#6c757d] text-lg">List of Students</Text>
+          <Text className="text-[#212529] font-semibold text-lg">
+            Attendance: {attendedCount}/{students.length}
+          </Text>
+        </View>
         <ScrollView>
           {students.map((student) => (
             <StudentsListCard
@@ -136,11 +147,9 @@ const TasmikDetailScreen = () => {
               status={student.status}
               matric={student.matric}
               classroom={classroom}
-              sessionTitle={title}
-              sessionId={id}
-              date={date}
+              tasmik={tasmik}
               onPressAttendance={() =>
-                handleAttendanceButton(student.id, classroom, id)
+                handleAttendanceButton(student.id, classroom, tasmik.id)
               }
             />
           ))}
@@ -176,23 +185,25 @@ const TasmikDetailScreen = () => {
         </View>
 
         <View className="mx-5 pt-3 space-y-3">
-          <Text className=" text-xl font-bold text-[#826aed]">{title}</Text>
+          <Text className=" text-xl font-bold text-[#826aed]">
+            {tasmik.title}
+          </Text>
           <View className="space-y-1">
             <Text className="text-[#6c757d] text-lg">Date & Time</Text>
             <Text className="text-[#212529] text-lg font-semibold">
-              {date} at {time}
+              {tasmik.date} at {tasmik.time}
             </Text>
           </View>
           <View className="space-y-1">
             <Text className="text-[#6c757d] text-lg">Place</Text>
             <Text className="text-[#212529] text-lg font-semibold">
-              {place}
+              {tasmik.place}
             </Text>
           </View>
           <View className="space-y-1">
             <Text className="text-[#6c757d] text-lg">Surah/ Juzu'</Text>
             <Text className="text-[#212529] text-lg font-semibold">
-              {details}
+              {tasmik.details}
             </Text>
           </View>
         </View>
