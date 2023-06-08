@@ -104,23 +104,23 @@ const TasmikDetailScreen = () => {
     }
   }, [initializing]);
 
-  const handleAttendanceButton = async (studentId, classroom, session) => {
+  const handleAttendanceButton = async (studentId, classroom, tasmik) => {
     try {
       const attendanceDocRef = doc(
         db,
         "classroom",
         classroom,
         "session",
-        session,
+        tasmik.id,
         "attendance",
         studentId
       );
       await setDoc(attendanceDocRef, {
         status: "Attended",
         uid: studentId,
-        session: session,
-        sessionTitle: title,
-        date: date,
+        session: tasmik.id,
+        sessionTitle: tasmik.title,
+        date: tasmik.date,
       });
     } catch (error) {
       console.log(error);
@@ -149,7 +149,7 @@ const TasmikDetailScreen = () => {
               classroom={classroom}
               tasmik={tasmik}
               onPressAttendance={() =>
-                handleAttendanceButton(student.id, classroom, tasmik.id)
+                handleAttendanceButton(student.id, classroom, tasmik)
               }
             />
           ))}

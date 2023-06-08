@@ -63,7 +63,7 @@ const LogInScreen = () => {
         <View className="bg-[#F1F5F8] h-full">
           <View className="items-center mb-3 my-12 py-8">
             <Image
-              source={require("../assets/logo2.png")}
+              source={require("../assets/logo1.png")}
               style={{
                 width: undefined,
                 height: 105,

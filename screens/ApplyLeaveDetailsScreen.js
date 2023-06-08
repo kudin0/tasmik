@@ -22,9 +22,15 @@ const ApplyLeaveDetailsScreen = () => {
     params: { leaveApplication },
   } = useRoute();
 
+  console.log(leaveApplication);
+
   const updateLeaveApplication = async () => {
-    const leaveApplication = doc(db, "leave_application", id);
-    await updateDoc(leaveApplication, { status: "Approved" });
+    try {
+      const leaveDoc = doc(db, "leave_application", leaveApplication.id);
+      await updateDoc(leaveDoc, { status: "Approved" });
+    } catch (error) {
+      console.log("update", error);
+    }
   };
 
   const updateAttendance = async () => {
@@ -42,7 +48,7 @@ const ApplyLeaveDetailsScreen = () => {
         status: "Applied Leave",
       });
     } catch (error) {
-      console.log(error);
+      console.log("update", error);
     }
   };
 
@@ -52,13 +58,15 @@ const ApplyLeaveDetailsScreen = () => {
       await Promise.all([updateLeaveApplication(), updateAttendance()]);
       navigation.navigate("LeaveApplication");
     } catch (error) {
-      console.log(error);
+      console.log("approve", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const rejectApplication = async () => {
-    const leaveApplication = doc(db, "leave_application", leaveApplication.id);
-    await updateDoc(leaveApplication, { status: "Rejected" });
+    const leaveDoc = doc(db, "leave_application", leaveApplication.id);
+    await updateDoc(leaveDoc, { status: "Rejected" });
     navigation.navigate("LeaveApplication");
   };
 
@@ -122,9 +130,13 @@ const ApplyLeaveDetailsScreen = () => {
             <Text className="text-[#6c757d] text-lg">
               Details of Application
             </Text>
-            <Text className="text-[#212529] text-lg font-semibold">
-              {leaveApplication.details}
-            </Text>
+            {leaveApplication.details == "" ? (
+              <Text className="text-[#212529] text-lg font-semibold">none</Text>
+            ) : (
+              <Text className="text-[#212529] text-lg font-semibold">
+                {leaveApplication.details}
+              </Text>
+            )}
           </View>
           {leaveApplication.status == "Pending" ? (
             <View className="pt-[100px] space-y-2">

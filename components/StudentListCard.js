@@ -18,7 +18,6 @@ const StudentsListCard = ({
   const navigation = useNavigation();
   const [user, setUser] = useState("");
   const [initializing, setInitializing] = useState(true);
-  console.log(tasmik);
 
   return (
     <View className="relative mt-2 flex-row">
