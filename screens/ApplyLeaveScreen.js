@@ -31,17 +31,16 @@ import {
 import { auth, db } from "../firebase";
 import DropDownPicker from "react-native-dropdown-picker";
 import moment from "moment/moment";
+import { set } from "firebase/database";
 
 const ApplyLeaveScreen = () => {
   const navigation = useNavigation();
   const [user, setUser] = useState("");
-  const [classroom, setClassroom] = useState("");
   const [tasmikSessions, setTasmikSessions] = useState([]);
   const [initializing, setInitializing] = useState(true);
   const [selectedSession, setSelectedSession] = useState(null);
   const [leaveReason, setLeaveReason] = useState(null);
   const [leaveDetails, setLeaveDetails] = useState("");
-  const [open, setOpen] = useState(false);
 
   const getUser = async () => {
     getDoc(doc(db, "users", auth.currentUser.uid)).then((snapshot) => {
@@ -58,41 +57,95 @@ const ApplyLeaveScreen = () => {
   }, []);
 
   const getTasmikSessions = async () => {
+    const sessionQuery = query(
+      collection(db, "classroom", user.classroom, "session")
+    );
+
     try {
-      const q = query(
-        collection(db, "classroom", user.classroom, "session"),
-        where("past", "==", "no")
-      );
-      const data = await getDocs(q);
-      const filteredData = data.docs.map((doc) => ({
-        value: doc.data(),
-        label: doc.data().title,
-      }));
-      setTasmikSessions(filteredData);
+      const sessionSnapshot = await getDocs(sessionQuery);
+      const sessionData = [];
+
+      for (const docSnap of sessionSnapshot.docs) {
+        const sessionId = docSnap.id;
+
+        const attendanceDocRef = doc(
+          db,
+          "classroom",
+          user.classroom,
+          "session",
+          sessionId,
+          "attendance",
+          user.uid
+        );
+
+        const attendanceDoc = await getDoc(attendanceDocRef);
+
+        if (
+          !attendanceDoc.exists() ||
+          attendanceDoc.data().status !== "Attended"
+        ) {
+          sessionData.push({
+            ...docSnap.data(),
+          });
+        }
+      }
+
+      setTasmikSessions(sessionData);
     } catch (error) {
       console.log(error);
+    } finally {
+      setInitializing(false);
     }
-  };
-
-  const getClassroomInfo = () => {
-    getDoc(doc(db, "classroom", user.classroom)).then((snapshot) => {
-      if (snapshot.exists) {
-        setClassroom(snapshot.data());
-        if (initializing) {
-          setInitializing(false);
-        }
-      } else {
-        console.log("User does not exists");
-      }
-    });
   };
 
   useEffect(() => {
     if (user) {
-      getClassroomInfo();
       getTasmikSessions();
     }
   }, [user]);
+
+  const DropdownPicker = ({ options }) => {
+    const [open, setOpen] = useState(false);
+
+    const toggleDropdown = () => {
+      setOpen(!open);
+    };
+
+    const handleSelect = (option) => {
+      setSelectedSession(option);
+      setOpen(false);
+    };
+
+    return (
+      <View className="relative z-10">
+        <TouchableOpacity
+          className="pl-2 h-12 bg-white rounded-lg justify-center shadow-sm"
+          onPress={toggleDropdown}
+        >
+          {selectedSession ? (
+            <Text className="text-lg text-[#212529]">
+              {selectedSession.title}
+            </Text>
+          ) : (
+            <Text className="text-lg text-[#adb5bd]">Select a session</Text>
+          )}
+        </TouchableOpacity>
+        {open && (
+          <View className="absolute top-[85%] w-full bg-white rounded-b-lg pl-2 space-y-2 pt-2">
+            {options.map((option) => (
+              <TouchableOpacity
+                className="h-12 justify-center"
+                key={option.id}
+                onPress={() => handleSelect(option)}
+              >
+                <Text className="text-lg text-[#212529]">{option.title}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
+      </View>
+    );
+  };
 
   const alertFormIncomplete = () => {
     Alert.alert("Application Incomplete", "Please fill out all fields.", [
@@ -103,6 +156,12 @@ const ApplyLeaveScreen = () => {
   const handleForm = async () => {
     if (!leaveReason || !selectedSession) {
       alertFormIncomplete();
+      console.log(
+        "leaveReason: ",
+        leaveReason,
+        "selectedSession: ",
+        selectedSession
+      );
       return;
     }
     try {
@@ -116,7 +175,7 @@ const ApplyLeaveScreen = () => {
         session: selectedSession.title,
         details: leaveDetails,
         status: "Pending",
-        classroom: classroom.id,
+        classroom: user.classroom,
       });
       setLeaveReason("");
       setSelectedSession("");
@@ -181,28 +240,7 @@ const ApplyLeaveScreen = () => {
             <Text className="mx-2 text-left text-lg font-semibold text-[#826aed]">
               Session
             </Text>
-            <DropDownPicker
-              placeholder="Select applied session"
-              items={tasmikSessions}
-              open={open}
-              setOpen={setOpen}
-              setValue={setSelectedSession}
-              value={selectedSession}
-              style={{
-                borderWidth: 0,
-                borderColor: "transparent",
-                shadowOpacity: 0.1,
-                shadowOffset: { width: 0, height: 1 },
-              }}
-              textStyle={{
-                fontSize: 17,
-                color: "#212529",
-              }}
-              dropDownContainerStyle={{
-                borderWidth: 0,
-                borderColor: "transparent",
-              }}
-            />
+            <DropdownPicker options={tasmikSessions} />
             <Text className="mx-2 text-left text-lg font-semibold text-[#826aed]">
               Reason
             </Text>

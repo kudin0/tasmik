@@ -25,19 +25,21 @@ const SplashScreen = () => {
         />
         <View className="-top-[110px] h-full bg-[#F1F5F8] rounded-t-2xl items-center justify-start shadow shadow-black/10">
           <View className="flex-row items-center justify-center mt-3">
-            <Text className="text-[#826aed] font-extrabold text-5xl pr-1">
-              myTasmik
-            </Text>
             <Image
-              source={require("../assets/whale1.png")}
-              className="w-16 h-12"
+              source={require("../assets/logo2.png")}
+              style={{
+                width: undefined,
+                height: 85,
+                aspectRatio: 3,
+                resizeMode: "contain",
+              }}
             />
           </View>
 
           <Text className="mt-2 text-2xl font-bold text-[#212529]">
             Welcome to myTasmik App
           </Text>
-          <Text className="mt-[60px] text-2xl font-semibold text-center text-[#6c757d] max-w-[300px]">
+          <Text className="mt-[60px] text-2xl font-semibold text-center text-[#6c757d] mx-5">
             Mobile App for IPT Student's Quran Memorization
           </Text>
           <TouchableOpacity

@@ -179,15 +179,17 @@ function HomeScreen() {
       style={SafeViewAndroid.AndroidSafeArea}
     >
       {/* Header */}
-      <View className="flex pt-7 pb-5 px-5 bg-[#826aed]">
+      <View className="flex pb-5 px-5 bg-[#826aed]">
         <View className="flex-row">
-          <View className="flex-row items-center">
-            <Text className="text-4xl font-extrabold text-[#FBFAFF] pr-2">
-              myTasmik
-            </Text>
+          <View className="flex-row items-start">
             <Image
-              source={require("../assets/whale3.png")}
-              className="w-14 h-12"
+              source={require("../assets/logo1.png")}
+              style={{
+                width: undefined,
+                height: 65,
+                aspectRatio: 3,
+                resizeMode: "contain",
+              }}
             />
           </View>
 
@@ -240,7 +242,7 @@ function HomeScreen() {
           <View className="rounded-b-2xl min-h-[60px] bg-white py-3">
             {tasmikSessions.map((tasmik, index) => (
               <View key={tasmik.id}>
-                <ScheduleCard tasmik={tasmik} />
+                <ScheduleCard tasmik={tasmik} classroom={user.classroom} />
                 {index != tasmikSessions.length - 1 ? (
                   <View className="border-b border-gray-400" />
                 ) : null}

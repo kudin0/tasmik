@@ -29,7 +29,6 @@ import {
 } from "firebase/firestore";
 import { useState } from "react";
 import { useEffect } from "react";
-import { set } from "firebase/database";
 
 const ReportScreen = () => {
   const navigation = useNavigation();
@@ -55,10 +54,10 @@ const ReportScreen = () => {
         const classroomSnapshot = await getDoc(classroomRef);
         if (classroomSnapshot.exists) {
           const lecturerName = classroomSnapshot.data().lecturer_name;
-          setUser((prevUser) => ({
-            ...prevUser,
+          setUser({
+            ...userSnapshot.data(),
             lecturerName: lecturerName,
-          }));
+          });
         }
       } else {
         console.log("User does not exist");
@@ -80,11 +79,13 @@ const ReportScreen = () => {
     try {
       const sessionSnapshot = await getDocs(sessionQuery);
       const sessionData = [];
+      const reportData = [];
       let count = 0;
 
       for (const docSnap of sessionSnapshot.docs) {
         const sessionId = docSnap.id;
 
+        //fetch attendance data
         const attendanceDocRef = doc(
           db,
           "classroom",
@@ -98,8 +99,11 @@ const ReportScreen = () => {
         const attendanceDoc = await getDoc(attendanceDocRef);
 
         let status = "none";
-        if (attendanceDoc.exists()) {
-          status = attendanceDoc.data().status;
+        if (attendanceDoc.exists) {
+          const attendanceData = attendanceDoc.data();
+          if (attendanceData && attendanceData.status) {
+            status = attendanceData.status;
+          }
         }
 
         if (status === "Attended") {
@@ -111,8 +115,27 @@ const ReportScreen = () => {
           ...docSnap.data(),
           status: status !== "none" ? status : "none",
         });
+
+        // fetch report data
+        const reportDocRef = doc(
+          db,
+          "classroom",
+          user.classroom,
+          "session",
+          sessionId,
+          "report",
+          user.uid
+        );
+
+        const reportDocSnapshot = await getDoc(reportDocRef);
+        if (reportDocSnapshot.data() !== undefined) {
+          reportData.push({
+            ...reportDocSnapshot.data(),
+          });
+        }
       }
 
+      setReports(reportData);
       setTasmikSessions(sessionData);
       setAttendedCount(count);
     } catch (error) {
@@ -153,29 +176,44 @@ const ReportScreen = () => {
 
       <View className="bg-[#F1F5F8] h-full px-5">
         {/* Profile */}
-        <View className="mt-2 space-y-2">
-          <Text className="text-[#826aed] font-bold text-xl">User Profile</Text>
-          <View>
-            <Text className="text-[#212529] font-semibold text-lg w-fit">
-              Name:<Text className="text-[#212529]"> {user.name}</Text>
+        <View className="my-2 pb-2">
+          <Text className="text-[#826aed] font-semibold text-lg">
+            User Profile
+          </Text>
+          <View className="mt-2 space-y-2">
+            <Text className="text-[#212529] text-lg w-fit">
+              Name:
+              <Text className="text-[#212529] font-semibold"> {user.name}</Text>
             </Text>
-            <Text className="text-[#212529] font-semibold text-lg">
-              Matric: <Text className="text-[#212529]">{user.matric}</Text>
-            </Text>
-            <Text className="text-[#212529] font-semibold text-lg">
-              Session Attended:{" "}
-              <Text className="text-[#212529]">
-                {attendedCount}/{tasmikSessions.length}
+            <Text className="text-[#212529] text-lg">
+              Matric:{" "}
+              <Text className="text-[#212529] font-semibold">
+                {user.matric}
               </Text>
             </Text>
-            <Text className="text-[#212529] font-semibold text-lg">
+            <Text className="text-[#212529] text-lg">
+              Session Attended:{" "}
+              <Text className="text-[#212529] font-semibold">
+                {attendedCount} out of {tasmikSessions.length}
+              </Text>
+            </Text>
+            <Text className="text-[#212529] text-lg">
               Lecturer:{" "}
-              <Text className="text-[#212529]">{user.lecturerName}</Text>
+              <Text className="text-[#212529] font-semibold">
+                {user.lecturerName}
+              </Text>
             </Text>
           </View>
         </View>
         {/* content */}
-        <ScrollView className="mx-5 space-y-2 mt-2"></ScrollView>
+        <Text className="text-[#826aed] font-semibold text-lg">
+          List of Report by session (if available){" "}
+        </Text>
+        <ScrollView className="space-y-2 mt-2">
+          {reports.map((report, index) => (
+            <ReportCard key={index} report={report} />
+          ))}
+        </ScrollView>
       </View>
 
       {/* Bottom Navigation */}

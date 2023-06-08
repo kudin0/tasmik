@@ -61,16 +61,16 @@ const LogInScreen = () => {
         </View>
 
         <View className="bg-[#F1F5F8] h-full">
-          <View className="items-center mb-3 mt-12">
-            <View className="rounded-full bg-[#826aed] p-4">
-              <Image
-                source={require("../assets/whale2.png")}
-                className="w-28 h-28"
-              />
-            </View>
-            <Text className="font-extrabold text-5xl text-[#826aed] py-5">
-              myTasmik
-            </Text>
+          <View className="items-center mb-3 my-12 py-8">
+            <Image
+              source={require("../assets/logo2.png")}
+              style={{
+                width: undefined,
+                height: 105,
+                aspectRatio: 3,
+                resizeMode: "contain",
+              }}
+            />
           </View>
           <View className="pt-[10px] px-5">
             <Text className="mx-2 text-left text-lg font-semibold text-[#826aed]">
