@@ -89,6 +89,7 @@ function HomeScreen() {
       const filteredData = data.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
+        userType: user.type,
       }));
       setAnnouncements(filteredData);
     } catch (error) {

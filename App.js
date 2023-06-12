@@ -26,6 +26,9 @@ import ReportLecturerScreen from "./screens/ReportLecturerScreen";
 import LeaveApplicationStudentScreen from "./screens/LeaveApplicationStudentScreen";
 import TasmikBalanceScreen from "./screens/TasmikBalanceScreen";
 import TasmikBalanceLecturerScreen from "./screens/TasmikBalanceLecturerScreen";
+import ForgotPasswordScreen from "./screens/ForgotPasswordScreen";
+import ReportPrevScreen from "./screens/ReportPrevScreen";
+import ReportTermScreen from "./screens/ReportTermScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -59,6 +62,11 @@ function App() {
           name="LogIn"
           component={LogInScreen}
           options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ForgotPassword"
+          component={ForgotPasswordScreen}
+          options={{ headerShown: false, animation: "none" }}
         />
       </Stack.Navigator>
     );
@@ -129,6 +137,16 @@ function App() {
       <Stack.Screen
         name="Report"
         component={ReportScreen}
+        options={{ headerShown: false, animation: "none" }}
+      />
+      <Stack.Screen
+        name="ReportPrevious"
+        component={ReportPrevScreen}
+        options={{ headerShown: false, animation: "none" }}
+      />
+      <Stack.Screen
+        name="ReportTerm"
+        component={ReportTermScreen}
         options={{ headerShown: false, animation: "none" }}
       />
       <Stack.Screen

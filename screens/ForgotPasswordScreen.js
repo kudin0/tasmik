@@ -18,26 +18,40 @@ import { useNavigation } from "@react-navigation/native";
 import { ArrowLeftIcon } from "react-native-heroicons/solid";
 import SafeViewAndroid from "../components/SafeViewAndroid";
 import { auth } from "../firebase";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import {
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 
-const LogInScreen = () => {
+const ForgotPasswordScreen = () => {
   const navigation = useNavigation();
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
 
-  loginUser = async (email, password) => {
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-    } catch (error) {
-      alertNoAcc();
+  const handleForgotPassword = (email) => {
+    if (email === "") {
+      alertNoEmail();
+    } else {
+      sendPasswordResetEmail(auth, email)
+        .then(() => {
+          alertSend();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
   };
 
-  const alertNoAcc = () => {
+  const alertNoEmail = () => {
+    Alert.alert("Request Failed", "Please input your email address.", [
+      { text: "OK", onPress: null },
+    ]);
+  };
+
+  const alertSend = () => {
     Alert.alert(
-      "Login Failed",
-      "Your email or password is incorrect. Please try again",
-      [{ text: "OK", onPress: null }]
+      "Password Reset Sent",
+      "Password reset email sent successfully. Please check your email.",
+      [{ text: "OK", onPress: navigation.goBack }]
     );
   };
 
@@ -56,25 +70,26 @@ const LogInScreen = () => {
             <ArrowLeftIcon size={20} color="#ffffff" />
           </TouchableOpacity>
           <Text className="text-xl text-[#ffffff] font-extrabold">
-            Login Page
+            Forgot Password
           </Text>
         </View>
 
         <View className="bg-[#F1F5F8] h-full">
-          <View className="items-center mb-3 my-12 py-4">
-            <View className="bg-[#826aed] p-3 rounded-xl">
-              <Image
-                source={require("../assets/logo3.png")}
-                style={{
-                  width: undefined,
-                  height: 105,
-                  aspectRatio: 3,
-                  resizeMode: "contain",
-                }}
-              />
-            </View>
+          <View className="items-center mb-3 my-12 py-8">
+            <Image
+              source={require("../assets/logo1.png")}
+              style={{
+                width: undefined,
+                height: 105,
+                aspectRatio: 3,
+                resizeMode: "contain",
+              }}
+            />
           </View>
           <View className="pt-[10px] px-5">
+            <Text className="mx-2 text-left text-lg font-semibold text-[#212529] pb-4">
+              Forgot your password?
+            </Text>
             <Text className="mx-2 text-left text-lg font-semibold text-[#826aed]">
               Email
             </Text>
@@ -87,36 +102,13 @@ const LogInScreen = () => {
               value={email}
               clearButtonMode="always"
             />
-
-            <Text className="mx-2 text-left text-lg font-semibold text-[#826aed]">
-              Password
-            </Text>
-            <TextInput
-              className="mb-5 pl-2 h-12 bg-white rounded-lg text-lg text-[#212529] shadow-sm"
-              maxLength={20}
-              placeholder="Password"
-              placeholderTextColor="#adb5bd"
-              secureTextEntry={true}
-              onChangeText={(password) => setPassword(password)}
-              value={password}
-              clearButtonMode="always"
-            />
-
-            <TouchableOpacity
-              className="items-end"
-              onPress={() => navigation.navigate("ForgotPassword")}
-            >
-              <Text className="text-[#826aed] font-semibold text-md">
-                Forgot your password?
-              </Text>
-            </TouchableOpacity>
           </View>
           <TouchableOpacity
-            onPress={() => loginUser(email, password)}
+            onPress={() => handleForgotPassword(email)}
             className="w-[270px] mt-[100px] items-center self-center bg-[#826aed] shadow shadow-black/30 rounded-xl p-3"
           >
             <Text className="text-center text-white text-2xl font-bold">
-              Log In
+              Forgot Password
             </Text>
           </TouchableOpacity>
         </View>
@@ -125,4 +117,4 @@ const LogInScreen = () => {
   );
 };
 
-export default LogInScreen;
+export default ForgotPasswordScreen;

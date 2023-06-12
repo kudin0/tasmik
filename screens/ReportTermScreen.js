@@ -30,7 +30,7 @@ import {
 import { useState } from "react";
 import { useEffect } from "react";
 
-const ReportScreen = () => {
+const ReportTermScreen = () => {
   const navigation = useNavigation();
   const [user, setUser] = useState("");
   const [reports, setReports] = useState([]);
@@ -39,26 +39,14 @@ const ReportScreen = () => {
   const [initializing, setInitializing] = useState(true);
 
   const {
-    params: { uid },
+    params: { uid, term },
   } = useRoute();
 
   const getUser = async () => {
     try {
       const userSnapshot = await getDoc(doc(db, "users", uid));
       if (userSnapshot.exists) {
-        const classroomRef = doc(
-          db,
-          "classroom",
-          userSnapshot.data().classroom
-        );
-        const classroomSnapshot = await getDoc(classroomRef);
-        if (classroomSnapshot.exists) {
-          setUser({
-            ...userSnapshot.data(),
-            lecturerName: classroomSnapshot.data().lecturer_name,
-            term: classroomSnapshot.data().term,
-          });
-        }
+        setUser(userSnapshot.data());
       } else {
         console.log("User does not exist");
       }
@@ -71,73 +59,14 @@ const ReportScreen = () => {
     getUser();
   }, []);
 
-  const getTasmikSessions = async () => {
-    const sessionQuery = query(
-      collection(db, "classroom", user.classroom, "session")
+  const getReports = async () => {
+    const reportQuery = query(
+      collection(db, "users", uid, "past_classroom", term.id, "report")
     );
-
     try {
-      const sessionSnapshot = await getDocs(sessionQuery);
-      const sessionData = [];
-      const reportData = [];
-      let count = 0;
-
-      for (const docSnap of sessionSnapshot.docs) {
-        const sessionId = docSnap.id;
-
-        //fetch attendance data
-        const attendanceDocRef = doc(
-          db,
-          "classroom",
-          user.classroom,
-          "session",
-          sessionId,
-          "attendance",
-          user.uid
-        );
-
-        const attendanceDoc = await getDoc(attendanceDocRef);
-
-        let status = "none";
-        if (attendanceDoc.exists) {
-          const attendanceData = attendanceDoc.data();
-          if (attendanceData && attendanceData.status) {
-            status = attendanceData.status;
-          }
-        }
-
-        if (status === "Attended") {
-          count++;
-        }
-
-        sessionData.push({
-          id: sessionId,
-          ...docSnap.data(),
-          status: status !== "none" ? status : "none",
-        });
-
-        // fetch report data
-        const reportDocRef = doc(
-          db,
-          "classroom",
-          user.classroom,
-          "session",
-          sessionId,
-          "report",
-          user.uid
-        );
-
-        const reportDocSnapshot = await getDoc(reportDocRef);
-        if (reportDocSnapshot.data() !== undefined) {
-          reportData.push({
-            ...reportDocSnapshot.data(),
-          });
-        }
-      }
-
-      setReports(reportData);
-      setTasmikSessions(sessionData);
-      setAttendedCount(count);
+      const reportSnapshot = await getDocs(reportQuery);
+      setReports(reportSnapshot.docs.map((doc) => doc.data()));
+      console.log(reportSnapshot.docs.map((doc) => doc.data()));
     } catch (error) {
       console.log(error);
     } finally {
@@ -147,7 +76,7 @@ const ReportScreen = () => {
 
   useEffect(() => {
     if (user) {
-      getTasmikSessions();
+      getReports();
     }
   }, [user]);
 
@@ -171,36 +100,15 @@ const ReportScreen = () => {
         >
           <ArrowLeftIcon size={20} color="#ffffff" />
         </TouchableOpacity>
-        <Text className="text-xl text-[#ffffff] font-extrabold">Report</Text>
+        <Text className="text-xl text-[#ffffff] font-extrabold">
+          Term Report
+        </Text>
       </View>
 
       <View className="bg-[#F1F5F8] h-full px-5">
-        <View className="flex-row items-center justify-evenly py-3">
-          <TouchableOpacity className="pb-2 border-b-2 border-[#826aed]">
-            <Text
-              className="text-base text-[#826aed] font-bold"
-              onPress={() => navigation.navigate("Report", { uid: uid })}
-            >
-              Current Term
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity className="pb-2">
-            <Text
-              className="text-base text-[#6c757d] font-bold"
-              onPress={() =>
-                navigation.navigate("ReportPrevious", { uid: uid })
-              }
-            >
-              Previous Term
-            </Text>
-          </TouchableOpacity>
-        </View>
-
         {/* Profile */}
         <View className="my-2 pb-2">
-          <Text className="text-[#826aed] font-bold text-xl">
-            {user.term}
-          </Text>
+          <Text className="text-[#826aed] font-bold text-xl">{term.term}</Text>
           <View className="mt-2 space-y-2">
             <Text className="text-[#212529] text-lg w-fit">
               Name:
@@ -215,13 +123,13 @@ const ReportScreen = () => {
             <Text className="text-[#212529] text-lg">
               Session Attended:{" "}
               <Text className="text-[#212529] font-semibold">
-                {attendedCount} out of {tasmikSessions.length}
+                {term.attendance}
               </Text>
             </Text>
             <Text className="text-[#212529] text-lg">
               Lecturer:{" "}
               <Text className="text-[#212529] font-semibold">
-                {user.lecturerName}
+                {term.lecturer}
               </Text>
             </Text>
           </View>
@@ -270,4 +178,4 @@ const ReportScreen = () => {
   );
 };
 
-export default ReportScreen;
+export default ReportTermScreen;

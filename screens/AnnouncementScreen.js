@@ -44,6 +44,7 @@ const AnnouncementScreen = () => {
       const filteredData = data.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
+        userType: user.type,
       }));
       setAnnouncements(filteredData);
       if (initializing) {
@@ -65,15 +66,14 @@ const AnnouncementScreen = () => {
   };
 
   useEffect(() => {
-    getAnnouncements();
     getUser();
   }, []);
 
   useEffect(() => {
-    if (isFocused) {
+    if (user && isFocused) {
       getAnnouncements();
     }
-  }, [isFocused]);
+  }, [user, isFocused]);
 
   const handleTasmikButton = () => {
     if (user.type === "lecturer") {

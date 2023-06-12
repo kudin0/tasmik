@@ -75,7 +75,7 @@ const AnnounceDetailScreen = () => {
         </View>
         <View className="mx-5 space-y-2 py-2 mb-2 border-b border-[#6c757d]">
           <Text className="text-[#6c757d] text-sm font-semibold">
-            Posted by {announcement.byName}
+            Posted by {announcement.by}
           </Text>
           <Text className="text-[#826aed] text-sm">{announcement.date}</Text>
         </View>

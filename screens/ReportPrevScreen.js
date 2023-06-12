@@ -29,13 +29,13 @@ import {
 } from "firebase/firestore";
 import { useState } from "react";
 import { useEffect } from "react";
+import { set } from "firebase/database";
+import TermReportCard from "../components/TermReportCard";
 
-const ReportScreen = () => {
+const ReportPrevScreen = () => {
   const navigation = useNavigation();
   const [user, setUser] = useState("");
-  const [reports, setReports] = useState([]);
-  const [attendedCount, setAttendedCount] = useState("");
-  const [tasmikSessions, setTasmikSessions] = useState([]);
+  const [terms, setTerms] = useState([]);
   const [initializing, setInitializing] = useState(true);
 
   const {
@@ -46,19 +46,7 @@ const ReportScreen = () => {
     try {
       const userSnapshot = await getDoc(doc(db, "users", uid));
       if (userSnapshot.exists) {
-        const classroomRef = doc(
-          db,
-          "classroom",
-          userSnapshot.data().classroom
-        );
-        const classroomSnapshot = await getDoc(classroomRef);
-        if (classroomSnapshot.exists) {
-          setUser({
-            ...userSnapshot.data(),
-            lecturerName: classroomSnapshot.data().lecturer_name,
-            term: classroomSnapshot.data().term,
-          });
-        }
+        setUser(userSnapshot.data());
       } else {
         console.log("User does not exist");
       }
@@ -71,73 +59,21 @@ const ReportScreen = () => {
     getUser();
   }, []);
 
-  const getTasmikSessions = async () => {
-    const sessionQuery = query(
-      collection(db, "classroom", user.classroom, "session")
+  const getTerms = async () => {
+    const termQuery = query(
+      collection(db, "users", uid, "past_classroom"),
+      where("status", "==", "Completed")
     );
-
     try {
-      const sessionSnapshot = await getDocs(sessionQuery);
-      const sessionData = [];
-      const reportData = [];
-      let count = 0;
-
-      for (const docSnap of sessionSnapshot.docs) {
-        const sessionId = docSnap.id;
-
-        //fetch attendance data
-        const attendanceDocRef = doc(
-          db,
-          "classroom",
-          user.classroom,
-          "session",
-          sessionId,
-          "attendance",
-          user.uid
-        );
-
-        const attendanceDoc = await getDoc(attendanceDocRef);
-
-        let status = "none";
-        if (attendanceDoc.exists) {
-          const attendanceData = attendanceDoc.data();
-          if (attendanceData && attendanceData.status) {
-            status = attendanceData.status;
-          }
-        }
-
-        if (status === "Attended") {
-          count++;
-        }
-
-        sessionData.push({
-          id: sessionId,
+      const termSnapshot = await getDocs(termQuery);
+      const termData = [];
+      for (const docSnap of termSnapshot.docs) {
+        termData.push({
+          id: docSnap.id,
           ...docSnap.data(),
-          status: status !== "none" ? status : "none",
         });
-
-        // fetch report data
-        const reportDocRef = doc(
-          db,
-          "classroom",
-          user.classroom,
-          "session",
-          sessionId,
-          "report",
-          user.uid
-        );
-
-        const reportDocSnapshot = await getDoc(reportDocRef);
-        if (reportDocSnapshot.data() !== undefined) {
-          reportData.push({
-            ...reportDocSnapshot.data(),
-          });
-        }
       }
-
-      setReports(reportData);
-      setTasmikSessions(sessionData);
-      setAttendedCount(count);
+      setTerms(termData);
     } catch (error) {
       console.log(error);
     } finally {
@@ -147,7 +83,7 @@ const ReportScreen = () => {
 
   useEffect(() => {
     if (user) {
-      getTasmikSessions();
+      getTerms();
     }
   }, [user]);
 
@@ -176,17 +112,17 @@ const ReportScreen = () => {
 
       <View className="bg-[#F1F5F8] h-full px-5">
         <View className="flex-row items-center justify-evenly py-3">
-          <TouchableOpacity className="pb-2 border-b-2 border-[#826aed]">
+          <TouchableOpacity className="pb-2">
             <Text
-              className="text-base text-[#826aed] font-bold"
+              className="text-base text-[#6c757d] font-bold"
               onPress={() => navigation.navigate("Report", { uid: uid })}
             >
               Current Term
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity className="pb-2">
+          <TouchableOpacity className="pb-2 border-b-2 border-[#826aed]">
             <Text
-              className="text-base text-[#6c757d] font-bold"
+              className="text-base text-[#826aed] font-bold"
               onPress={() =>
                 navigation.navigate("ReportPrevious", { uid: uid })
               }
@@ -197,9 +133,9 @@ const ReportScreen = () => {
         </View>
 
         {/* Profile */}
-        <View className="my-2 pb-2">
-          <Text className="text-[#826aed] font-bold text-xl">
-            {user.term}
+        <View className="pb-2">
+          <Text className="text-[#826aed] font-semibold text-lg">
+            User Profile
           </Text>
           <View className="mt-2 space-y-2">
             <Text className="text-[#212529] text-lg w-fit">
@@ -212,27 +148,15 @@ const ReportScreen = () => {
                 {user.matric}
               </Text>
             </Text>
-            <Text className="text-[#212529] text-lg">
-              Session Attended:{" "}
-              <Text className="text-[#212529] font-semibold">
-                {attendedCount} out of {tasmikSessions.length}
-              </Text>
-            </Text>
-            <Text className="text-[#212529] text-lg">
-              Lecturer:{" "}
-              <Text className="text-[#212529] font-semibold">
-                {user.lecturerName}
-              </Text>
-            </Text>
           </View>
         </View>
         {/* content */}
         <Text className="text-[#826aed] font-semibold text-lg">
-          List of Report by session (if available){" "}
+          List of Previous Term (if available)
         </Text>
         <ScrollView className="space-y-2 mt-2">
-          {reports.map((report, index) => (
-            <ReportCard key={index} report={report} />
+          {terms.map((term) => (
+            <TermReportCard key={term.id} term={term} uid={uid} />
           ))}
         </ScrollView>
       </View>
@@ -270,4 +194,4 @@ const ReportScreen = () => {
   );
 };
 
-export default ReportScreen;
+export default ReportPrevScreen;

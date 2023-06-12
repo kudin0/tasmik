@@ -27,6 +27,7 @@ const ProfileScreen = () => {
     getDoc(userInfoRef).then((snapshot) => {
       if (snapshot.exists) {
         setUser(snapshot.data());
+        console.log(snapshot.data());
         if (initializing) {
           setInitializing(false);
         }
@@ -75,6 +76,9 @@ const ProfileScreen = () => {
 
       <ScrollView
         showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
+          paddingBottom: 100,
+        }}
         className="bg-[#F1F5F8] h-full"
       >
         {/* Top */}
@@ -102,20 +106,40 @@ const ProfileScreen = () => {
           </View>
           <View className="mx-7 space-y-1 pt-3">
             <Text className="text-base font-semibold text-[#6c757d]">
-              Date of Birth
+              Department
             </Text>
             <Text className="text-lg font-semibold text-[#826aed]">
-              {user.dob}
+              {user.department}
             </Text>
           </View>
           <View className="mx-7 space-y-1 pt-3">
             <Text className="text-base font-semibold text-[#6c757d]">
-              Gender
+              Faculty
             </Text>
             <Text className="text-lg font-semibold text-[#826aed]">
-              {user.gender}
+              {user.faculty}
             </Text>
           </View>
+          {user.position != null ? (
+            <View className="mx-7 space-y-1 pt-3">
+              <Text className="text-base font-semibold text-[#6c757d]">
+                Position
+              </Text>
+              <Text className="text-lg font-semibold text-[#826aed]">
+                {user.position}
+              </Text>
+            </View>
+          ) : null}
+          {user.level != null ? (
+            <View className="mx-7 space-y-1 pt-3">
+              <Text className="text-base font-semibold text-[#6c757d]">
+                Level
+              </Text>
+              <Text className="text-lg font-semibold text-[#826aed]">
+                {user.level}
+              </Text>
+            </View>
+          ) : null}
           {user.year != null ? (
             <View className="mx-7 space-y-1 pt-3">
               <Text className="text-base font-semibold text-[#6c757d]">
