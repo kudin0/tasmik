@@ -58,23 +58,48 @@ function HomeScreen() {
   }, []);
 
   const getTasmikSessions = async () => {
+    const sessionQuery = query(
+      collection(db, "classroom", user.classroom, "session")
+    );
+
     try {
-      const q = query(
-        collection(db, "classroom", user.classroom, "session"),
-        where("past", "==", "no"),
-        limit(3)
-      );
-      const data = await getDocs(q);
-      const filteredData = data.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      }));
-      setTasmikSessions(filteredData);
-      if (initializing) {
-        setInitializing(false);
+      const sessionSnapshot = await getDocs(sessionQuery);
+      const sessionData = [];
+
+      for (const docSnap of sessionSnapshot.docs) {
+        if (sessionData.length >= 3) {
+          break;
+        }
+        const sessionId = docSnap.id;
+
+        const attendanceDocRef = doc(
+          db,
+          "classroom",
+          user.classroom,
+          "session",
+          sessionId,
+          "attendance",
+          user.uid
+        );
+
+        const attendanceDoc = await getDoc(attendanceDocRef);
+
+        if (
+          !attendanceDoc.exists() ||
+          attendanceDoc.data().status !== "Attended"
+        ) {
+          sessionData.push({
+            id: sessionId,
+            ...docSnap.data(),
+          });
+        }
       }
+
+      setTasmikSessions(sessionData);
     } catch (error) {
       console.log(error);
+    } finally {
+      setInitializing(false);
     }
   };
 
@@ -175,9 +200,7 @@ function HomeScreen() {
     );
 
   return (
-    <SafeAreaView
-      className="bg-[#826aed] pt-5 h-full flex"
-    >
+    <SafeAreaView className="bg-[#826aed] pt-5 h-full flex">
       {/* Header */}
       <View className="flex pb-5 px-5 bg-[#826aed]">
         <View className="flex-row">
