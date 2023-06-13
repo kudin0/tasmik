@@ -58,8 +58,7 @@ const ForgotPasswordScreen = () => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <SafeAreaView
-        className="pt-[60px] bg-[#826aed]"
-        style={SafeViewAndroid.AndroidSafeArea}
+        className="bg-[#826aed]"
       >
         {/* header */}
         <View className="flex-row relative h-12 bg-[#826aed] items-center justify-center border-b border-gray-300">

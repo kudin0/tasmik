@@ -177,7 +177,6 @@ function HomeScreen() {
   return (
     <SafeAreaView
       className="bg-[#826aed] pt-5 h-full flex"
-      style={SafeViewAndroid.AndroidSafeArea}
     >
       {/* Header */}
       <View className="flex pb-5 px-5 bg-[#826aed]">

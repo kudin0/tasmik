@@ -169,7 +169,6 @@ const TasmikDetailScreen = () => {
     <>
       <SafeAreaView
         className="bg-white h-full"
-        style={SafeViewAndroid.AndroidSafeArea}
       >
         {/* Header */}
         <View className="flex-row relative bg-white items-center justify-center border-b border-gray-300 py-4">

@@ -108,7 +108,6 @@ const LeaveApplicationScreen = () => {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <SafeAreaView
         className="pt-7 bg-[#826aed] h-full"
-        style={SafeViewAndroid.AndroidSafeArea}
       >
         {/* Header */}
         <View className="flex-row relative h-12 bg-[#826aed] items-center justify-center border-b border-gray-300">

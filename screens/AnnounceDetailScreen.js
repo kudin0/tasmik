@@ -48,7 +48,6 @@ const AnnounceDetailScreen = () => {
   return (
     <SafeAreaView
       className="bg-white h-full"
-      style={SafeViewAndroid.AndroidSafeArea}
     >
       <View className="flex-row relative py-4 bg-white items-center justify-center border-b border-gray-300">
         <TouchableOpacity

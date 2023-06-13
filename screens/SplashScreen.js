@@ -13,10 +13,7 @@ const SplashScreen = () => {
   const navigation = useNavigation();
 
   return (
-    <SafeAreaView
-      style={SafeViewAndroid.AndroidSafeArea}
-      className="bg-[#BECBD3]"
-    >
+    <SafeAreaView className="bg-[#BECBD3]">
       {/* Backgorund */}
       <View>
         <Image
