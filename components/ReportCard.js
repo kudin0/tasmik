@@ -17,6 +17,9 @@ const ReportCard = ({ report }) => {
             Date: <Text className="text-[#212529]">{report.date}</Text>
           </Text>
           <Text className="text-[#6c757d] font-semibold text-base">
+            Progress: <Text className="text-[#212529]">{report.progress}</Text>
+          </Text>
+          <Text className="text-[#6c757d] font-semibold text-base">
             Comment:
           </Text>
           <Text className="text-[#212529] font-semibold text-base w-64">

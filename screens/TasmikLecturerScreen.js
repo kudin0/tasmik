@@ -147,7 +147,7 @@ const TasmikLecturerScreen = () => {
           >
             <CalendarIcon size={20} color="#826aed" />
             <Text className="text-base text-[#826aed] font-semibold">
-              Tasmik Balance
+              Tasmik Progress
             </Text>
           </TouchableOpacity>
           <TouchableOpacity className="border border-[#826aed] px-2 py-1 rounded-full flex-row items-center space-x-1">

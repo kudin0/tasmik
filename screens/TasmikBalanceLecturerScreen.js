@@ -133,7 +133,7 @@ const TasmikBalanceLecturerScreen = () => {
             <ArrowLeftIcon size={20} color="#ffffff" />
           </TouchableOpacity>
           <Text className="text-xl text-[#ffffff] font-extrabold">
-            Tasmik Balance
+            Tasmik Progress
           </Text>
         </View>
 

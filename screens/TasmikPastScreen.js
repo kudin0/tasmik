@@ -196,7 +196,7 @@ const TasmikPastScreen = () => {
             >
               <CalendarIcon size={20} color="#826aed" />
               <Text className="text-base text-[#826aed] font-semibold">
-                Tasmik Balance
+                Tasmik Progress
               </Text>
             </TouchableOpacity>
             <TouchableOpacity

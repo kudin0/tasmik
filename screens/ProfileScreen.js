@@ -27,7 +27,6 @@ const ProfileScreen = () => {
     getDoc(userInfoRef).then((snapshot) => {
       if (snapshot.exists) {
         setUser(snapshot.data());
-        console.log(snapshot.data());
         if (initializing) {
           setInitializing(false);
         }
@@ -104,14 +103,46 @@ const ProfileScreen = () => {
               Profile Details
             </Text>
           </View>
-          <View className="mx-7 space-y-1 pt-3">
-            <Text className="text-base font-semibold text-[#6c757d]">
-              Department
-            </Text>
-            <Text className="text-lg font-semibold text-[#826aed]">
-              {user.department}
-            </Text>
-          </View>
+          {user.year != null ? (
+            <View className="mx-7 space-y-1 pt-3">
+              <Text className="text-base font-semibold text-[#6c757d]">
+                Year of Study
+              </Text>
+              <Text className="text-lg font-semibold text-[#826aed]">
+                Year {user.year}
+              </Text>
+            </View>
+          ) : null}
+          {user.level != null ? (
+            <View className="mx-7 space-y-1 pt-3">
+              <Text className="text-base font-semibold text-[#6c757d]">
+                Level
+              </Text>
+              <Text className="text-lg font-semibold text-[#826aed]">
+                {user.level}
+              </Text>
+            </View>
+          ) : null}
+          {user.course != null ? (
+            <View className="mx-7 space-y-1 pt-3">
+              <Text className="text-base font-semibold text-[#6c757d]">
+                Course
+              </Text>
+              <Text className="text-lg font-semibold text-[#826aed]">
+                {user.course}
+              </Text>
+            </View>
+          ) : null}
+          {user.type === "lecturer" ? (
+            <View className="mx-7 space-y-1 pt-3">
+              <Text className="text-base font-semibold text-[#6c757d]">
+                Department
+              </Text>
+              <Text className="text-lg font-semibold text-[#826aed]">
+                {user.department}
+              </Text>
+            </View>
+          ) : null}
           <View className="mx-7 space-y-1 pt-3">
             <Text className="text-base font-semibold text-[#6c757d]">
               Faculty
@@ -127,36 +158,6 @@ const ProfileScreen = () => {
               </Text>
               <Text className="text-lg font-semibold text-[#826aed]">
                 {user.position}
-              </Text>
-            </View>
-          ) : null}
-          {user.level != null ? (
-            <View className="mx-7 space-y-1 pt-3">
-              <Text className="text-base font-semibold text-[#6c757d]">
-                Level
-              </Text>
-              <Text className="text-lg font-semibold text-[#826aed]">
-                {user.level}
-              </Text>
-            </View>
-          ) : null}
-          {user.year != null ? (
-            <View className="mx-7 space-y-1 pt-3">
-              <Text className="text-base font-semibold text-[#6c757d]">
-                Year of Study
-              </Text>
-              <Text className="text-lg font-semibold text-[#826aed]">
-                Year {user.year}
-              </Text>
-            </View>
-          ) : null}
-          {user.course != null ? (
-            <View className="mx-7 space-y-1 pt-3">
-              <Text className="text-base font-semibold text-[#6c757d]">
-                Course
-              </Text>
-              <Text className="text-lg font-semibold text-[#826aed]">
-                {user.course}
               </Text>
             </View>
           ) : null}
