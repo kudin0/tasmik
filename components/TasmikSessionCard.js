@@ -16,7 +16,7 @@ const TasmikSessionCard = ({ tasmik, classroom }) => {
         });
       }}
     >
-      <View className="bg-[#ffffff] justify-between items-center rounded-lg w-full flex-row p-4 shadow shadow-black/20">
+      <View className="bg-[#ffffff] justify-between items-center rounded-lg w-full flex-row p-4 shadow shadow-black/30">
         <View>
           <Text className="text-[#212529] font-bold text-lg">
             {tasmik.title}

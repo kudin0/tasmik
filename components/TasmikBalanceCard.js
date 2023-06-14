@@ -7,7 +7,7 @@ const TasmikBalanceCard = ({ session }) => {
   const navigation = useNavigation();
 
   return (
-    <View className="bg-[#ffffff] relative my-1 rounded-xl w-full p-4 shadow shadow-black/20">
+    <View className="bg-[#ffffff] relative my-1 rounded-xl w-full p-4 shadow shadow-black/30">
       <View className="flex-row justify-between">
         <View className="flex">
           <Text className="text-[#826aed] font-bold text-lg">

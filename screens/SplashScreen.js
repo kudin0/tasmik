@@ -20,7 +20,7 @@ const SplashScreen = () => {
           source={require("../assets/bg.png")}
           className="w-full bg-gray-300 h-[500px]"
         />
-        <View className="-top-[110px] h-full bg-[#F1F5F8] rounded-t-2xl items-center justify-start shadow shadow-black/10">
+        <View className="-top-[110px] h-full bg-[#F1F5F8] rounded-t-2xl items-center justify-start shadow shadow-black/30">
           <View className="flex-row items-center justify-center mt-3">
             <Image
               source={require("../assets/logo1.png")}

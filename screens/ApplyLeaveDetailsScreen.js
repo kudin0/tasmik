@@ -141,7 +141,7 @@ const ApplyLeaveDetailsScreen = () => {
             <View className="pt-[100px] space-y-2">
               <TouchableOpacity
                 onPress={approveApplication}
-                className="w-[270px] items-center self-center bg-[#826aed] shadow shadow-black/20 rounded-xl p-3"
+                className="w-[270px] items-center self-center bg-[#826aed] shadow shadow-black/30 rounded-xl p-3"
               >
                 <Text className="text-center text-white text-2xl font-bold">
                   Approve
@@ -149,7 +149,7 @@ const ApplyLeaveDetailsScreen = () => {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={rejectApplication}
-                className="w-[270px] items-center self-center bg-[#ffffff] shadow shadow-black/20 rounded-xl p-3"
+                className="w-[270px] items-center self-center bg-[#ffffff] shadow shadow-black/30 rounded-xl p-3"
               >
                 <Text className="text-center text-[#826aed] text-2xl font-bold">
                   Reject

@@ -12,7 +12,7 @@ const TermReportCard = ({ uid, term }) => {
         navigation.navigate("ReportTerm", { uid: uid, term: term });
       }}
     >
-      <View className="bg-[#ffffff] justify-between items-center rounded-lg w-full flex-row px-4 py-2 border shadow shadow-black/10">
+      <View className="bg-[#ffffff] justify-between items-center rounded-lg w-full flex-row px-4 py-2 border">
         <View>
           <Text className="text-[#826aed] font-bold text-lg">{term.term}</Text>
           <Text className="text-[#6c757d] font-semibold text-base">

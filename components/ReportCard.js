@@ -7,8 +7,8 @@ const ReportCard = ({ report }) => {
   const navigation = useNavigation();
 
   return (
-    <View className="relative bg-white mt-2 flex-row">
-      <View className="bg-[#ffffff] justify-between items-center rounded-lg w-full flex-row p-4 border shadow shadow-black/10">
+    <View className="relative mt-2 flex-row">
+      <View className="bg-[#ffffff] justify-between items-center rounded-xl w-full flex-row p-4 border shadow shadow-black/30">
         <View>
           <Text className="text-[#826aed] font-bold text-lg">
             {report.sessionTitle}

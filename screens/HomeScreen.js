@@ -200,7 +200,7 @@ function HomeScreen() {
     );
 
   return (
-    <SafeAreaView className="bg-[#826aed] pt-5 h-full flex">
+    <SafeAreaView className="bg-[#826aed] h-full flex">
       {/* Header */}
       <View className="flex pb-5 px-5 bg-[#826aed]">
         <View className="flex-row">
@@ -233,12 +233,12 @@ function HomeScreen() {
       >
         {/* Announcement Card */}
         <ScrollView
-          contentContainerStyle={{}}
           horizontal
           showsHorizontalScrollIndicator={false}
           pagingEnabled
           ref={scrollViewRef}
           onScrollEndDrag={onScrollEndDrag}
+          className="shadow shadow-black/50"
         >
           {announcements.map((announcement) => (
             <AnnouncementCard
@@ -250,7 +250,7 @@ function HomeScreen() {
         </ScrollView>
 
         {/* Schedule */}
-        <View className="flex pt-4 px-5 shadow shadow-black/20">
+        <View className="flex pt-4 px-5 shadow shadow-black/50">
           <TouchableOpacity
             className="py-5 w-full bg-[#826aed] rounded-t-2xl"
             onPress={handleTasmikButton}
@@ -290,7 +290,7 @@ function HomeScreen() {
               className="h-24 w-28 items-center justify-center rounded-2xl mx-1"
               onPress={handleTasmikButton}
             >
-              <View className="rounded-full bg-[#ffffff] p-3 shadow-sm shadow-black/10">
+              <View className="rounded-full bg-[#ffffff] p-3 shadow-sm shadow-black/30">
                 <CalendarDaysIcon size={45} color="#d62828" />
               </View>
               <Text className="text-[#212529] font-semibold text-base">
@@ -301,7 +301,7 @@ function HomeScreen() {
               className="h-24 w-28 items-center justify-center rounded-2xl mx-1"
               onPress={handleApplyLeaveButton}
             >
-              <View className="rounded-full bg-[#ffffff] p-3 shadow-sm shadow-black/10">
+              <View className="rounded-full bg-[#ffffff] p-3 shadow-sm shadow-black/30">
                 <InboxStackIcon size={45} color="#588157" />
               </View>
               <Text className="text-[#212529] font-semibold text-base">
@@ -312,7 +312,7 @@ function HomeScreen() {
               className="h-24 w-28 items-center justify-center rounded-2xl mx-1"
               onPress={() => navigation.navigate("Announcement")}
             >
-              <View className="rounded-full bg-[#ffffff] p-3 shadow-sm shadow-black/10">
+              <View className="rounded-full bg-[#ffffff] p-3 shadow-sm shadow-black/30">
                 <MegaphoneIcon size={45} color="#3a86ff" />
               </View>
               <Text className="text-[#212529] font-semibold text-base">
@@ -323,7 +323,7 @@ function HomeScreen() {
               className="h-24 w-28 items-center justify-center rounded-2xl mx-1"
               onPress={handleReportButton}
             >
-              <View className="rounded-full bg-[#ffffff] p-3 shadow-sm shadow-black/10">
+              <View className="rounded-full bg-[#ffffff] p-3 shadow-sm shadow-black/30">
                 <PresentationChartLineIcon size={45} color="#ffbe0b" />
               </View>
               <Text className="text-[#212529] font-semibold text-base">
@@ -338,7 +338,7 @@ function HomeScreen() {
       </ScrollView>
 
       {/* Bottom Navigation */}
-      <View className="absolute inset-x-0 bottom-0 h-[90px] pb-3 bg-white shadow shadow-black/10">
+      <View className="absolute inset-x-0 bottom-0 h-[90px] pb-3 bg-white shadow shadow-black/30">
         <View className="flex-row justify-between px-14 pt-[6px]">
           <TouchableOpacity
             className=""

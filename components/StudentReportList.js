@@ -9,7 +9,7 @@ const StudentReportList = ({ student }) => {
 
   return (
     <View className="relative bg-white mt-2 flex-row">
-      <View className="bg-[#ffffff] justify-between items-center rounded-lg w-full flex-row p-4 border shadow shadow-black/10">
+      <View className="bg-[#ffffff] justify-between items-center rounded-lg w-full flex-row p-4 border">
         <View>
           <Text
             numberOfLines={1}

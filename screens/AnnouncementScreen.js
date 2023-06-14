@@ -94,7 +94,7 @@ const AnnouncementScreen = () => {
 
   return (
     <SafeAreaView
-      className="pt-7 bg-[#826aed] h-full"
+      className="bg-[#826aed] h-full"
     >
       {/* header */}
       <View className="flex-row relative h-12 bg-[#826aed] items-center justify-center border-b border-gray-300">
@@ -114,7 +114,8 @@ const AnnouncementScreen = () => {
           contentContainerStyle={{
             paddingBottom: 100,
           }}
-          className="bg-[#F1F5F8] h-full"
+          showsVerticalScrollIndicator={false}
+          className="bg-[#F1F5F8] h-full mx-1"
         >
           {announcements.map((announcement) => (
             <AnnouncementCard
@@ -130,7 +131,7 @@ const AnnouncementScreen = () => {
       {/* lecturer add announcement */}
       {user.type == "lecturer" ? (
         <TouchableOpacity
-          className="bg-white py-5 px-3 rounded-2xl shadow shadow-black/10 items-center justify-center absolute bottom-28 right-4"
+          className="bg-white py-5 px-3 rounded-2xl shadow shadow-black/30 items-center justify-center absolute bottom-28 right-4"
           onPress={() => navigation.navigate("AnnounceWrite")}
         >
           <PlusIcon size={30} color="#826aed" />
@@ -141,7 +142,7 @@ const AnnouncementScreen = () => {
       ) : null}
 
       {/* Bottom Navigation */}
-      <View className="absolute inset-x-0 bottom-0 h-[90px] pb-3 bg-white shadow shadow-black/10">
+      <View className="absolute inset-x-0 bottom-0 h-[90px] pb-3 bg-white shadow shadow-black/30">
         <View className="flex-row justify-between px-14 pt-[6px]">
           <TouchableOpacity
             className=""

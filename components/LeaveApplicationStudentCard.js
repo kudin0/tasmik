@@ -6,7 +6,7 @@ const LeaveApplicationStudentCard = ({ student }) => {
   const navigation = useNavigation();
 
   return (
-    <View className="bg-[#ffffff] relative my-2 rounded-xl w-full p-4 shadow shadow-black/20">
+    <View className="bg-[#ffffff] relative my-2 rounded-xl w-full p-4 shadow shadow-black/30">
       <TouchableOpacity
         className="flex-row justify-between"
         onPress={() => {

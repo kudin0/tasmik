@@ -98,7 +98,7 @@ const LeaveStatusCard = ({ leaveApplication, type }) => {
     );
 
   return (
-    <View className="bg-[#ffffff] relative my-2 rounded-xl w-full p-4 shadow shadow-black/20">
+    <View className="bg-[#ffffff] relative my-2 rounded-xl w-full p-4 shadow shadow-black/30">
       <View>
         {type === "student" ? <TypeStudent /> : null}
         {type === "lecturer" ? <TypeLecturer /> : null}

@@ -82,9 +82,7 @@ const ApplyLeaveStatusScreen = () => {
     );
 
   return (
-    <SafeAreaView
-      className="pt-7 bg-[#826aed] h-full"
-    >
+    <SafeAreaView className="bg-[#826aed] h-full">
       {/* Header */}
       <View className="flex-row relative h-12 bg-[#826aed] items-center justify-center border-b border-gray-300">
         <TouchableOpacity
@@ -120,7 +118,13 @@ const ApplyLeaveStatusScreen = () => {
             </TouchableOpacity>
           </View>
         </View>
-        <ScrollView className="px-5 space-y-2 bg-[#F1F5F8] h-full">
+        <ScrollView
+          className="px-5 space-y-2 bg-[#F1F5F8] h-full"
+          contentContainerStyle={{
+            paddingBottom: 100,
+          }}
+          showsVerticalScrollIndicator={false}
+        >
           {leaveApplications.map((leaveApplication) => (
             <LeaveStatusCard
               key={leaveApplication.id}
@@ -128,6 +132,8 @@ const ApplyLeaveStatusScreen = () => {
               leaveApplication={leaveApplication}
             />
           ))}
+
+          <View className="py-20"></View>
         </ScrollView>
       </View>
     </SafeAreaView>

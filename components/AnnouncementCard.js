@@ -15,7 +15,7 @@ const AnnouncementCard = ({ screen, announcement }) => {
       }}
     >
       {screen == "home" ? (
-        <View className="h-28 w-screen bg-white justify-center items-center">
+        <View className="h-28 w-screen bg-[#ffffff] justify-center items-center">
           <Text className="text-[#212529] text-lg font-semibold">
             {announcement.title}
           </Text>

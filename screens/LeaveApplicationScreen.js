@@ -107,7 +107,7 @@ const LeaveApplicationScreen = () => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <SafeAreaView
-        className="pt-7 bg-[#826aed] h-full"
+        className="bg-[#826aed] h-full"
       >
         {/* Header */}
         <View className="flex-row relative h-12 bg-[#826aed] items-center justify-center border-b border-gray-300">
@@ -138,7 +138,7 @@ const LeaveApplicationScreen = () => {
         </View>
 
         {/* Bottom Navigation */}
-        <View className="absolute inset-x-0 bottom-0 h-[90px] pb-3 bg-white shadow shadow-black/10">
+        <View className="absolute inset-x-0 bottom-0 h-[90px] pb-3 bg-white shadow shadow-black/30">
           <View className="flex-row justify-between px-14 pt-[6px]">
             <TouchableOpacity
               className=""
