@@ -24,8 +24,6 @@ import {
   where,
 } from "firebase/firestore";
 import { auth, db } from "../firebase";
-import DropDownPicker from "react-native-dropdown-picker";
-import moment from "moment/moment";
 
 const TasmikGradingScreen = () => {
   const navigation = useNavigation();
@@ -62,6 +60,7 @@ const TasmikGradingScreen = () => {
         session: tasmik.id,
         sessionTitle: tasmik.title,
         date: tasmik.date,
+        progress: tasmik.details,
       });
     } catch (error) {
       console.log(error);
@@ -72,9 +71,7 @@ const TasmikGradingScreen = () => {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <SafeAreaView
-        className="bg-[#826aed] h-full"
-      >
+      <SafeAreaView className="bg-[#826aed] h-full">
         {/* Header */}
         <View className="flex-row relative h-12 bg-[#826aed] items-center justify-center border-b border-gray-300">
           <TouchableOpacity
